@@ -1,22 +1,28 @@
 const express = require("express")
 const axios = require("axios")
 const cheerio = require("cheerio")
-const path = require("path")
 
 const app = express()
 
-app.use(express.static(__dirname))
-
-app.get("/", (req,res)=>{
-res.sendFile(path.join(__dirname,"index.html"))
-})
+app.use(express.static("."))
 
 app.get("/produto", async (req,res)=>{
 
-const url = req.query.url
-
 try{
 
+let url = req.query.url
+
+// segue redirecionamento da Shopee
+const redirect = await axios.get(url,{
+maxRedirects:5,
+headers:{
+"User-Agent":"Mozilla/5.0"
+}
+})
+
+url = redirect.request.res.responseUrl
+
+// pega página real do produto
 const response = await axios.get(url,{
 headers:{
 "User-Agent":"Mozilla/5.0"
@@ -31,15 +37,11 @@ $('meta[property="og:title"]').attr("content") ||
 $("title").text() ||
 "Produto Shopee"
 
-res.json({
-titulo
-})
+res.json({ titulo })
 
 }catch(e){
 
-res.json({
-titulo:"Produto Shopee"
-})
+res.json({ titulo:"Produto Shopee" })
 
 }
 
