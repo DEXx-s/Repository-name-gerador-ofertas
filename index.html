@@ -70,109 +70,44 @@ margin-top:10px;
 </div>
 
 <script>
+async function gerarOferta(){
 
-async function gerar(){
+const url = document.getElementById("url").value
 
-const url = document.getElementById("link").value
-
-const res = await fetch("/oferta?url="+encodeURIComponent(url))
+const res = await fetch("/oferta?url=" + encodeURIComponent(url))
 
 const data = await res.json()
 
-if(data.erro){
-alert("Erro ao gerar oferta")
-return
-}
+const nome = data.title || "Produto Shopee"
+const preco = data.price || "Ver preço no link"
+const imagem = data.image || ""
 
-const texto = `🛍️ ${data.nome}
+const texto =
+`🛍️ ${nome}
 
-❌ De: ${data.precoOriginal || "-"}
-✅ Por: ${data.precoAtual}
+❌ De: -
+✅ Por: ${preco}
 
 🛒✨ COMPRE AQUI
-${data.link}
+${url}
 
 ⚠️ Promoção sujeita a alteração a qualquer momento.`
 
-document.getElementById("texto").value = texto
+document.getElementById("resultado").innerText = texto
 
-document.getElementById("preview").innerHTML = `
-<h3>🛍️ ${data.nome}</h3>
+document.getElementById("card").innerHTML = `
+<h3>🛍️ ${nome}</h3>
 
-<p>❌ De: ${data.precoOriginal || "-"}</p>
-<p>✅ Por: ${data.precoAtual}</p>
+${imagem ? `<img src="${imagem}" style="width:120px;border-radius:10px;">` : ""}
+
+<p>❌ De: -</p>
+<p>✅ Por: ${preco}</p>
 
 <p>🛒✨ COMPRE AQUI</p>
-
-<a href="${data.link}" target="_blank">${data.link}</a>
+<a href="${url}" target="_blank">${url}</a>
 
 <p>⚠️ Promoção sujeita a alteração a qualquer momento.</p>
 `
 
 }
-
-function copiar(){
-
-const txt = document.getElementById("texto")
-
-txt.select()
-
-document.execCommand("copy")
-
-alert("Oferta copiada!")
-
-}
-
-</script>
-
-</body>
-</html><script>
-
-async function gerarOferta(){
-
-const url = document.getElementById("link").value
-
-const res = await fetch("/oferta?url="+encodeURIComponent(url))
-
-const data = await res.json()
-
-if(data.erro){
-alert("Erro ao gerar oferta")
-return
-}
-
-const texto = `🛍️ ${data.nome}
-
-❌ De: ${data.precoOriginal || "-"}
-✅ Por: ${data.precoAtual}
-
-🛒✨ COMPRE AQUI
-${data.link}
-
-⚠️ Promoção sujeita a alteração a qualquer momento.`
-
-document.getElementById("resultado").value = texto
-
-}
-
-function copiar(){
-
-const txt = document.getElementById("resultado")
-
-txt.select()
-
-document.execCommand("copy")
-
-alert("Copiado!")
-
-}
-
-function whatsapp(){
-
-const texto = encodeURIComponent(document.getElementById("resultado").value)
-
-window.open("https://wa.me/?text="+texto)
-
-}
-
 </script>
