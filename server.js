@@ -1,16 +1,10 @@
 const express = require("express")
-const axios = require("axios")
-const cheerio = require("cheerio")
-const path = require("path")
+const puppeteer = require("puppeteer")
 
 const app = express()
 const PORT = process.env.PORT || 3000
 
 app.use(express.static(__dirname))
-
-app.get("/", (req,res)=>{
-res.sendFile(path.join(__dirname,"index.html"))
-})
 
 app.get("/oferta", async (req,res)=>{
 
@@ -18,82 +12,60 @@ const url = req.query.url
 
 try{
 
-// abre o link curto e segue redirecionamento
-const response = await axios.get(url,{
-headers:{
-"user-agent":"Mozilla/5.0"
-},
-maxRedirects:10
+const browser = await puppeteer.launch({
+args: ['--no-sandbox','--disable-setuid-sandbox']
 })
 
-const html = response.data
+const page = await browser.newPage()
 
-let nome=""
-let precoAtual=""
-let precoOriginal=""
-let imagem=""
+await page.goto(url,{waitUntil:"domcontentloaded"})
 
-// tenta pegar JSON interno da Shopee
-try{
+await page.waitForTimeout(4000)
 
-const jsonMatch = html.match(/window\.__INITIAL_STATE__\s*=\s*(\{.*?\});/)
+const data = await page.evaluate(()=>{
 
-if(jsonMatch){
+const title =
+document.querySelector("meta[property='og:title']")?.content ||
+document.title ||
+"Produto Shopee"
 
-const json = JSON.parse(jsonMatch[1])
+const image =
+document.querySelector("meta[property='og:image']")?.content || ""
 
-if(json.item){
+let price = ""
 
-nome = json.item.name
+const priceElement =
+document.querySelector("[class*='price']") ||
+document.querySelector("[class*='Price']")
 
-imagem = "https://cf.shopee.com.br/file/"+json.item.image
-
-if(json.item.price){
-precoAtual = "R$ "+(json.item.price/100000).toFixed(2)
+if(priceElement){
+price = priceElement.innerText
 }
 
-if(json.item.price_before_discount){
-precoOriginal = "R$ "+(json.item.price_before_discount/100000).toFixed(2)
+return{
+title,
+image,
+price
 }
 
-}
+})
 
-}
+await browser.close()
 
-}catch(e){}
+res.json(data)
 
-// fallback se não achar JSON
-if(!nome){
-
-const $ = cheerio.load(html)
-
-nome =
-$('meta[property="og:title"]').attr("content") ||
-$("title").text()
-
-imagem =
-$('meta[property="og:image"]').attr("content")
-
-}
-
-const linkLimpo = url.split("?")[0]
+}catch(e){
 
 res.json({
-nome,
-precoAtual,
-precoOriginal,
-imagem,
-link:linkLimpo
+title:"Produto Shopee",
+price:"",
+image:""
 })
-
-}catch(err){
-
-res.json({erro:"Erro ao gerar oferta"})
 
 }
 
 })
 
-app.listen(PORT, ()=>{
-console.log("Servidor rodando 🚀")
+app.listen(PORT,()=>{
+console.log("Servidor rodando")
 })
