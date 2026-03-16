@@ -1,6 +1,5 @@
 const express = require("express")
-const axios = require("axios")
-const cheerio = require("cheerio")
+const puppeteer = require("puppeteer")
 
 const app = express()
 
@@ -12,29 +11,20 @@ try{
 
 const url = req.query.url
 
-const response = await axios.get(url,{
-headers:{
-"User-Agent":"Mozilla/5.0",
-"Accept-Language":"pt-BR,pt;q=0.9"
-}
+const browser = await puppeteer.launch({
+args:["--no-sandbox","--disable-setuid-sandbox"]
 })
 
-const html = response.data
-const $ = cheerio.load(html)
+const page = await browser.newPage()
 
-let titulo =
-$('meta[property="og:title"]').attr("content")
+await page.goto(url,{waitUntil:"domcontentloaded"})
 
-if(!titulo){
-titulo = $("title").text()
-}
+const titulo = await page.title()
 
-if(!titulo){
-titulo = "Produto Shopee"
-}
+await browser.close()
 
 res.json({
-titulo: titulo
+titulo
 })
 
 }catch(e){
