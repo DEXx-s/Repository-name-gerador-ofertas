@@ -1,5 +1,6 @@
 const express = require("express")
-const puppeteer = require("puppeteer")
+const axios = require("axios")
+const cheerio = require("cheerio")
 
 const app = express()
 
@@ -11,41 +12,30 @@ const url = req.query.url
 
 try{
 
-const browser = await puppeteer.launch({
-args:["--no-sandbox","--disable-setuid-sandbox"]
-})
-
-const page = await browser.newPage()
-
-await page.goto(url,{waitUntil:"domcontentloaded"})
-
-await page.waitForTimeout(5000)
-
-const data = await page.evaluate(()=>{
-
-let titulo = document.title || ""
-
-let preco = document.body.innerText.match(/R\$ ?[0-9]+[,\.][0-9]+/)
-
-let imagem = document.querySelector("img")?.src || ""
-
-return{
-titulo,
-preco:preco ? preco[0] : "",
-imagem
+const response = await axios.get(url,{
+headers:{
+"User-Agent":"Mozilla/5.0"
 }
-
 })
 
-await browser.close()
+const html = response.data
+const $ = cheerio.load(html)
 
-res.json(data)
+let titulo = $('meta[property="og:title"]').attr("content") 
+          || $("title").text() 
+          || "Produto Shopee"
+
+let imagem = $('meta[property="og:image"]').attr("content") || ""
+
+res.json({
+titulo,
+imagem
+})
 
 }catch(e){
 
 res.json({
 titulo:"Produto Shopee",
-preco:"",
 imagem:""
 })
 
