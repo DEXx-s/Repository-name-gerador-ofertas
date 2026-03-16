@@ -12,8 +12,7 @@ app.use(express.static(__dirname))
 
 // página inicial
 app.get("/", (req,res)=>{
-res.sendFile(__dirname + "/index.html")
-})
+res.sendFile(path.join(__dirname, "index.html"))
 
 // rota da oferta
 app.get("/oferta", async (req,res)=>{
