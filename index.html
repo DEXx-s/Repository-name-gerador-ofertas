@@ -90,20 +90,17 @@ const precoAntigo = document.getElementById("precoAntigo").value
 const precoNovo = document.getElementById("precoNovo").value
 
 if(!url){
-alert("Cole o link")
+alert("Cole o link da Shopee")
 return
 }
 
 try{
 
-// API que pega preview do produto
-const api = "https://api.microlink.io/?url=" + encodeURIComponent(url)
-
-const res = await fetch(api)
+// usa API de preview
+const res = await fetch("https://jsonlink.io/api/extract?url="+encodeURIComponent(url))
 const data = await res.json()
 
-const nome = data.data.title || "Produto Shopee"
-const imagem = data.data.image?.url || ""
+let nome = data.title || "Produto Shopee"
 
 const texto = `🛍️ ${nome}
 
@@ -119,7 +116,6 @@ document.getElementById("texto").value = texto
 
 document.getElementById("preview").innerHTML = `
 <h3>${nome}</h3>
-${imagem ? `<img src="${imagem}" width="120">` : ""}
 <p>❌ De: R$ ${precoAntigo}</p>
 <p>✅ Por: R$ ${precoNovo}</p>
 <a href="${url}" target="_blank">🛒 Comprar</a>
