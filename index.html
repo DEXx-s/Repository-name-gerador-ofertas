@@ -1,16 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-<title>Gerador Shopee</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Gerador de Ofertas Shopee</title>
+
 <style>
-body{font-family:Arial;background:#111;color:white;text-align:center;padding:40px}
-input{width:90%;padding:15px;font-size:16px}
-button{padding:15px 30px;margin-top:10px;background:#00c853;border:none;color:white;font-size:18px}
-textarea{width:90%;height:200px;margin-top:20px}
+
+body{
+background:#0e0e0e;
+font-family:Arial;
+color:white;
+text-align:center;
+padding:30px;
+}
+
+.container{
+max-width:600px;
+margin:auto;
+}
+
+input{
+width:100%;
+padding:15px;
+font-size:16px;
+border:none;
+border-radius:6px;
+margin-bottom:15px;
+}
+
+button{
+background:#00c853;
+color:white;
+border:none;
+padding:15px 25px;
+font-size:16px;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#00b34a;
+}
+
+textarea{
+width:100%;
+height:200px;
+margin-top:20px;
+padding:15px;
+border-radius:6px;
+border:none;
+font-size:14px;
+}
+
+img{
+max-width:200px;
+margin-top:15px;
+border-radius:10px;
+}
+
+.copy{
+margin-top:10px;
+background:#2962ff;
+}
+
 </style>
 </head>
 
 <body>
+
+<div class="container">
 
 <h2>🔥 Gerador de Ofertas Shopee</h2>
 
@@ -18,23 +78,69 @@ textarea{width:90%;height:200px;margin-top:20px}
 
 <br>
 
-<button onclick="gerar()">Gerar Oferta</button>
+<button onclick="gerarOferta()">Gerar Oferta</button>
 
-<textarea id="resultado"></textarea>
+<br>
+
+<img id="imagem" style="display:none">
+
+<textarea id="resultado" placeholder="A oferta vai aparecer aqui..."></textarea>
+
+<br>
+
+<button class="copy" onclick="copiar()">Copiar Oferta</button>
+
+</div>
 
 <script>
 
-async function gerar(){
+async function gerarOferta(){
 
-let link = document.getElementById("link").value
+const link = document.getElementById("link").value
 
-let api = "https://SEU-SERVIDOR/oferta?url="+link
+if(!link){
+alert("Cole o link da Shopee")
+return
+}
 
-let r = await fetch(api)
+document.getElementById("resultado").value = "Gerando oferta..."
 
-let data = await r.json()
+try{
 
-document.getElementById("resultado").value = data.texto
+const resposta = await fetch(`/oferta?url=${encodeURIComponent(link)}`)
+
+const dados = await resposta.json()
+
+if(dados.erro){
+document.getElementById("resultado").value = dados.erro
+return
+}
+
+document.getElementById("resultado").value = dados.texto
+
+if(dados.imagem){
+document.getElementById("imagem").src = dados.imagem
+document.getElementById("imagem").style.display = "block"
+}
+
+}catch(e){
+
+document.getElementById("resultado").value = "Erro ao gerar oferta"
+
+}
+
+}
+
+function copiar(){
+
+const texto = document.getElementById("resultado")
+
+texto.select()
+texto.setSelectionRange(0,99999)
+
+document.execCommand("copy")
+
+alert("Oferta copiada!")
 
 }
 
