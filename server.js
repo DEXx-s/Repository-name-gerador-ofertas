@@ -14,20 +14,27 @@ const url = req.query.url
 
 const response = await axios.get(url,{
 headers:{
-"User-Agent":"Mozilla/5.0"
+"User-Agent":"Mozilla/5.0",
+"Accept-Language":"pt-BR,pt;q=0.9"
 }
 })
 
 const html = response.data
 const $ = cheerio.load(html)
 
-const titulo =
-$('meta[property="og:title"]').attr("content") ||
-$("title").text() ||
-"Produto Shopee"
+let titulo =
+$('meta[property="og:title"]').attr("content")
+
+if(!titulo){
+titulo = $("title").text()
+}
+
+if(!titulo){
+titulo = "Produto Shopee"
+}
 
 res.json({
-titulo
+titulo: titulo
 })
 
 }catch(e){
