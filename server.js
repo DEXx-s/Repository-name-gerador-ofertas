@@ -34,55 +34,26 @@ const $ = cheerio.load(html)
 
 const nome =
 $('meta[property="og:title"]').attr("content") ||
-$("title").text()
+"Produto Shopee"
 
 const imagem =
-$('meta[property="og:image"]').attr("content")
+$('meta[property="og:image"]').attr("content") ||
+""
 
 let precoAtual = $(".pdp-price").first().text()
 let precoOriginal = $(".pdp-price-line").first().text()
 
-let desconto = ""
-
-if(precoOriginal && precoAtual){
-
-const p1 = parseFloat(precoOriginal.replace(/[^\d]/g,""))
-const p2 = parseFloat(precoAtual.replace(/[^\d]/g,""))
-
-if(p1 && p2){
-const off = Math.round((1 - p2/p1)*100)
-desconto = off+"% OFF"
-}
-
-}
-
 if(!precoAtual){
-precoAtual="Ver preço no link"
+precoAtual = "Ver preço no link"
 }
 
 const linkLimpo = url.split("?")[0]
-
-const texto = `🔥 SUPER OFERTA SHOPEE
-
-${nome}
-
-💰 De: ${precoOriginal || "-"}
-💸 Por: ${precoAtual}
-
-🔥 ${desconto}
-
-🛒 Comprar agora 👇
-${linkLimpo}
-
-⚡ Promoções mudam rápido`
 
 res.json({
 nome,
 imagem,
 precoAtual,
 precoOriginal,
-desconto,
-texto,
 link:linkLimpo
 })
 
@@ -94,6 +65,6 @@ res.json({erro:"Erro ao gerar oferta"})
 
 })
 
-app.listen(PORT,()=>{
+app.listen(PORT, ()=>{
 console.log("Servidor rodando 🚀")
 })
