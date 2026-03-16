@@ -4,6 +4,7 @@ const cheerio = require("cheerio")
 const path = require("path")
 
 const app = express()
+
 const PORT = process.env.PORT || 3000
 
 app.use(express.static(__dirname))
@@ -15,6 +16,10 @@ res.sendFile(path.join(__dirname,"index.html"))
 app.get("/oferta", async (req,res)=>{
 
 const url = req.query.url
+
+if(!url){
+return res.json({erro:"Link não informado"})
+}
 
 try{
 
@@ -29,64 +34,32 @@ const html = response.data
 
 const $ = cheerio.load(html)
 
-let nome =
+const nome =
 $('meta[property="og:title"]').attr("content") ||
-$("title").text()
+"Produto Shopee"
 
-let imagem =
-$('meta[property="og:image"]').attr("content")
-
-let precoAtual =
-$(".pdp-price").first().text()
-
-let precoOriginal =
-$(".pdp-price-line").first().text()
-
-if(!precoAtual){
-precoAtual = "Ver preço no link"
-}
-
-let desconto = ""
-
-if(precoOriginal && precoAtual){
-
-let p1 = parseFloat(precoOriginal.replace(/[^\d]/g,""))
-let p2 = parseFloat(precoAtual.replace(/[^\d]/g,""))
-
-if(p1 && p2){
-let off = Math.round((1 - p2/p1) * 100)
-desconto = off + "% OFF"
-}
-
-}
-
-const linkLimpo = url.split("?")[0]
+const imagem =
+$('meta[property="og:image"]').attr("content") ||
+""
 
 const texto = `🔥 SUPER OFERTA SHOPEE
 
 ${nome}
 
-💰 De: ${precoOriginal || "-"}
-💸 Por: ${precoAtual}
-
-🔥 ${desconto}
+💰 Confira o preço no link
 
 🛒 Comprar agora 👇
-${linkLimpo}
+${url}
 
 ⚡ Promoções mudam rápido`
 
 res.json({
 nome,
 imagem,
-precoAtual,
-precoOriginal,
-desconto,
-texto,
-link:linkLimpo
+texto
 })
 
-}catch(err){
+}catch(e){
 
 res.json({erro:"Erro ao gerar oferta"})
 
