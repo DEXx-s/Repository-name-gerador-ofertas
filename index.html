@@ -1,3 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Gerador de Ofertas Shopee</title>
+
+<style>
+
+body{
+background:#000;
+font-family:Arial;
+text-align:center;
+color:white;
+padding:40px;
+}
+
+input{
+width:80%;
+padding:12px;
+margin:8px;
+border-radius:8px;
+border:none;
+}
+
+button{
+padding:12px 20px;
+border:none;
+border-radius:8px;
+background:#00c853;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+.card{
+background:#1b5e20;
+padding:20px;
+margin-top:30px;
+border-radius:10px;
+}
+
+textarea{
+width:90%;
+height:150px;
+margin-top:15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>🔥 Gerador de Ofertas Shopee</h2>
+
+<input id="link" placeholder="Cole o link da Shopee">
+
+<br>
+
+<input id="precoAntigo" placeholder="Preço antigo">
+
+<br>
+
+<input id="precoNovo" placeholder="Preço novo">
+
+<br><br>
+
+<button onclick="gerar()">Gerar Oferta</button>
+
+<div class="card">
+
+<div id="preview"></div>
+
+<textarea id="texto"></textarea>
+
+<br><br>
+
+<button onclick="copiar()">Copiar</button>
+
+<button onclick="whatsapp()">Enviar WhatsApp</button>
+
+</div>
+
 <script>
 
 async function gerar(){
@@ -6,12 +89,19 @@ const url = document.getElementById("link").value
 const precoAntigo = document.getElementById("precoAntigo").value
 const precoNovo = document.getElementById("precoNovo").value
 
+if(!url){
+alert("Cole o link")
+return
+}
+
+try{
+
 const res = await fetch("/produto?url="+encodeURIComponent(url))
 const data = await res.json()
 
-const nome = data.titulo
+const nome = data.titulo || "Produto Shopee"
 
-let texto = `🛍️ ${nome}
+const texto = `🛍️ ${nome}
 
 ❌ De: R$ ${precoAntigo}
 ✅ Por: R$ ${precoNovo}
@@ -30,6 +120,33 @@ document.getElementById("preview").innerHTML = `
 <a href="${url}" target="_blank">🛒 Comprar</a>
 `
 
+}catch(e){
+
+alert("Erro ao gerar oferta")
+
+}
+
+}
+
+function copiar(){
+
+const textarea = document.getElementById("texto")
+textarea.select()
+document.execCommand("copy")
+
+alert("Oferta copiada")
+
+}
+
+function whatsapp(){
+
+const texto = encodeURIComponent(document.getElementById("texto").value)
+
+window.open("https://wa.me/?text="+texto)
+
 }
 
 </script>
+
+</body>
+</html>
