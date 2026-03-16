@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Gerador Shopee</title>
+<style>
+body{font-family:Arial;background:#111;color:white;text-align:center;padding:40px}
+input{width:90%;padding:15px;font-size:16px}
+button{padding:15px 30px;margin-top:10px;background:#00c853;border:none;color:white;font-size:18px}
+textarea{width:90%;height:200px;margin-top:20px}
+</style>
+</head>
+
+<body>
+
+<h2>🔥 Gerador de Ofertas Shopee</h2>
+
+<input id="link" placeholder="Cole o link da Shopee">
+
+<br>
+
+<button onclick="gerar()">Gerar Oferta</button>
+
+<textarea id="resultado"></textarea>
+
+<script>
+
+async function gerar(){
+
+let link = document.getElementById("link").value
+
+let api = "https://SEU-SERVIDOR/oferta?url="+link
+
+let r = await fetch(api)
+
+let data = await r.json()
+
+document.getElementById("resultado").value = data.texto
+
+}
+
+</script>
+
+</body>
+</html>
