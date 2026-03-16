@@ -37,19 +37,15 @@ $("title").text()
 const imagem =
 $('meta[property="og:image"]').attr("content")
 
+// detectar preços
 let precoAtual =
-$(".pdp-price").first().text() ||
+$(".pdp-price").text() ||
 $('[class*="price"]').first().text()
 
 let precoOriginal =
-$(".pdp-price-original").first().text() ||
 $('[class*="original"]').first().text()
 
-let cupom =
-$('[class*="voucher"]').first().text() ||
-"Possível cupom na página"
-
-function limparPreco(p){
+function limpar(p){
 
 if(!p) return null
 
@@ -62,8 +58,8 @@ p.replace("R$","")
 
 }
 
-const atual = limparPreco(precoAtual)
-const original = limparPreco(precoOriginal)
+const atual = limpar(precoAtual)
+const original = limpar(precoOriginal)
 
 let desconto = ""
 
@@ -71,40 +67,47 @@ if(atual && original){
 
 const off = Math.round((1 - atual/original)*100)
 
-desconto = `${off}% OFF`
+desconto = off + "% OFF"
+
 }
+
+// detectar cupom
+let cupom =
+$('[class*="voucher"]').first().text() ||
+"Ver cupom na página"
+
+// reduzir link
+const linkCurto = url.split("?")[0]
 
 const texto = `🔥 SUPER OFERTA SHOPEE
 
 ${nome}
 
 💰 De: ${precoOriginal || "-"}
-💸 Por: ${precoAtual}
-
-🎟 Cupom: ${cupom}
+💸 Por: ${precoAtual || "Ver preço no link"}
 
 🔥 ${desconto}
 
+🎟 Cupom: ${cupom}
+
 🛒 Comprar agora 👇
-${url}
+${linkCurto}
 
 ⚡ Promoções mudam rápido`
 
 res.json({
 nome,
+imagem,
 precoAtual,
 precoOriginal,
 desconto,
 cupom,
-imagem,
 texto
 })
 
 }catch(err){
 
-res.json({
-erro:"Erro ao buscar produto"
-})
+res.json({erro:"Erro ao buscar produto"})
 
 }
 
