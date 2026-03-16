@@ -16,44 +16,72 @@ app.get("/oferta", async (req,res)=>{
 
 const url = req.query.url
 
-if(!url){
-return res.json({erro:"Link não informado"})
-}
-
 try{
 
 const response = await axios.get(url,{
 headers:{
 "user-agent":"Mozilla/5.0"
 },
-maxRedirects:5
+maxRedirects:10
 })
 
 const html = response.data
+
+let nome = ""
+let precoAtual = ""
+let precoOriginal = ""
+let imagem = ""
+
+try{
+
+const jsonMatch = html.match(/window\.__INITIAL_STATE__\s*=\s*(\{.*?\});/)
+
+if(jsonMatch){
+
+const data = JSON.parse(jsonMatch[1])
+
+const item = data.item
+
+if(item){
+
+nome = item.name
+
+imagem = "https://cf.shopee.com.br/file/"+item.image
+
+if(item.price){
+precoAtual = "R$ "+(item.price/100000).toFixed(2)
+}
+
+if(item.price_before_discount){
+precoOriginal = "R$ "+(item.price_before_discount/100000).toFixed(2)
+}
+
+}
+
+}
+
+}catch(e){}
+
+if(!nome){
+
 const $ = cheerio.load(html)
 
-const nome =
+nome =
 $('meta[property="og:title"]').attr("content") ||
-"Produto Shopee"
+$("title").text()
 
-const imagem =
-$('meta[property="og:image"]').attr("content") ||
-""
+imagem =
+$('meta[property="og:image"]').attr("content")
 
-let precoAtual = $(".pdp-price").first().text()
-let precoOriginal = $(".pdp-price-line").first().text()
-
-if(!precoAtual){
-precoAtual = "Ver preço no link"
 }
 
 const linkLimpo = url.split("?")[0]
 
 res.json({
 nome,
-imagem,
 precoAtual,
 precoOriginal,
+imagem,
 link:linkLimpo
 })
 
