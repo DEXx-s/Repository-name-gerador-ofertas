@@ -7,56 +7,32 @@ app.use(express.static(__dirname))
 
 app.get("/oferta", async (req,res)=>{
 
-const shortUrl = req.query.url
+const url = req.query.url
 
 try{
 
-// resolve link curto
-const redirect = await fetch(shortUrl,{redirect:"follow"})
-const finalUrl = redirect.url
+const api = "https://api.microlink.io?url=" + encodeURIComponent(url)
 
-// pega html da página final
-const response = await fetch(finalUrl,{
-headers:{
-"user-agent":
-"Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-}
-})
+const response = await fetch(api)
 
-const html = await response.text()
+const data = await response.json()
 
-// pega dados JSON da página
-const jsonMatch = html.match(/<script type="application\/ld\+json">(.*?)<\/script>/)
-
-let title=""
-let image=""
-let price=""
-
-if(jsonMatch){
-
-const data = JSON.parse(jsonMatch[1])
-
-title = data.name || ""
-image = data.image || ""
-price = data.offers?.price
-? "R$ " + data.offers.price
-: ""
-
-}
+const title = data.data.title || "Produto Shopee"
+const image = data.data.image?.url || ""
 
 res.json({
 title,
 image,
-price,
-url:finalUrl
+price:"",
+url
 })
 
-}catch(err){
+}catch(e){
 
 res.json({
 title:"Erro ao pegar produto",
-price:"",
-image:""
+image:"",
+price:""
 })
 
 }
