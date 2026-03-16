@@ -1,4 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Gerador de Ofertas Shopee</title>
+
+<style>
+
+body{
+background:#0a0a0a;
+font-family:Arial;
+color:white;
+text-align:center;
+padding:30px;
+}
+
+input{
+width:80%;
+padding:12px;
+border-radius:8px;
+border:none;
+}
+
+button{
+padding:12px 20px;
+border:none;
+border-radius:8px;
+margin-top:10px;
+background:#00c853;
+color:white;
+cursor:pointer;
+}
+
+.card{
+background:#1b5e20;
+padding:20px;
+border-radius:10px;
+margin-top:20px;
+text-align:left;
+}
+
+textarea{
+width:100%;
+height:200px;
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>🔥 Gerador de Ofertas Shopee</h2>
+
+<input id="link" placeholder="Cole o link da Shopee">
+
+<br>
+
+<button onclick="gerar()">Gerar Oferta</button>
+
+<div class="card">
+
+<div id="preview"></div>
+
+<textarea id="texto"></textarea>
+
+<button onclick="copiar()">Copiar</button>
+
+</div>
+
 <script>
+
+async function gerar(){
+
+const url = document.getElementById("link").value
+
+const res = await fetch("/oferta?url="+encodeURIComponent(url))
+
+const data = await res.json()
+
+if(data.erro){
+alert("Erro ao gerar oferta")
+return
+}
+
+const texto = `🛍️ ${data.nome}
+
+❌ De: ${data.precoOriginal || "-"}
+✅ Por: ${data.precoAtual}
+
+🛒✨ COMPRE AQUI
+${data.link}
+
+⚠️ Promoção sujeita a alteração a qualquer momento.`
+
+document.getElementById("texto").value = texto
+
+document.getElementById("preview").innerHTML = `
+<h3>🛍️ ${data.nome}</h3>
+
+<p>❌ De: ${data.precoOriginal || "-"}</p>
+<p>✅ Por: ${data.precoAtual}</p>
+
+<p>🛒✨ COMPRE AQUI</p>
+
+<a href="${data.link}" target="_blank">${data.link}</a>
+
+<p>⚠️ Promoção sujeita a alteração a qualquer momento.</p>
+`
+
+}
+
+function copiar(){
+
+const txt = document.getElementById("texto")
+
+txt.select()
+
+document.execCommand("copy")
+
+alert("Oferta copiada!")
+
+}
+
+</script>
+
+</body>
+</html><script>
 
 async function gerarOferta(){
 
