@@ -1,6 +1,4 @@
 const express = require("express")
-const puppeteer = require("puppeteer-core")
-const chromium = require("@sparticuz/chromium")
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -13,49 +11,26 @@ const url = req.query.url
 
 try{
 
-const browser = await puppeteer.launch({
-args: chromium.args,
-defaultViewport: chromium.defaultViewport,
-executablePath: await chromium.executablePath(),
-headless: chromium.headless
-})
+const response = await fetch(url)
 
-const page = await browser.newPage()
+const html = await response.text()
 
-await page.goto(url,{waitUntil:"networkidle2"})
+const titleMatch = html.match(/property="og:title" content="([^"]+)"/)
+const imageMatch = html.match(/property="og:image" content="([^"]+)"/)
 
-await page.waitForTimeout(5000)
+let priceMatch = html.match(/R\$ ?\d+,\d+/)
 
-const data = await page.evaluate(()=>{
+const title = titleMatch ? titleMatch[1] : "Produto Shopee"
+const image = imageMatch ? imageMatch[1] : ""
+const price = priceMatch ? priceMatch[0] : ""
 
-const title =
-document.querySelector("meta[property='og:title']")?.content ||
-document.title
-
-const image =
-document.querySelector("meta[property='og:image']")?.content || ""
-
-let price = ""
-
-const match = document.body.innerText.match(/R\$ ?\d+,\d+/)
-
-if(match){
-price = match[0]
-}
-
-return{
+res.json({
 title,
 image,
 price
-}
-
 })
 
-await browser.close()
-
-res.json(data)
-
-}catch(e){
+}catch(err){
 
 res.json({
 title:"Erro ao pegar produto",
@@ -67,4 +42,6 @@ image:""
 
 })
 
-app.listen(PORT,()=>console.log("Servidor rodando"))
+app.listen(PORT,()=>{
+console.log("Servidor rodando")
+})
