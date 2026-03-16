@@ -1,5 +1,6 @@
 const express = require("express")
-const puppeteer = require("puppeteer")
+const puppeteer = require("puppeteer-core")
+const chromium = require("@sparticuz/chromium")
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -13,20 +14,17 @@ const url = req.query.url
 try{
 
 const browser = await puppeteer.launch({
-headless:true,
-args:[
-"--no-sandbox",
-"--disable-setuid-sandbox",
-"--disable-dev-shm-usage",
-"--disable-gpu"
-]
+args: chromium.args,
+defaultViewport: chromium.defaultViewport,
+executablePath: await chromium.executablePath(),
+headless: chromium.headless
 })
 
 const page = await browser.newPage()
 
-await page.goto(url,{waitUntil:"domcontentloaded"})
+await page.goto(url,{waitUntil:"networkidle2"})
 
-await page.waitForTimeout(6000)
+await page.waitForTimeout(5000)
 
 const data = await page.evaluate(()=>{
 
@@ -39,10 +37,10 @@ document.querySelector("meta[property='og:image']")?.content || ""
 
 let price = ""
 
-const prices = document.body.innerText.match(/R\$ ?\d+,\d+/g)
+const match = document.body.innerText.match(/R\$ ?\d+,\d+/)
 
-if(prices){
-price = prices[0]
+if(match){
+price = match[0]
 }
 
 return{
@@ -69,6 +67,4 @@ image:""
 
 })
 
-app.listen(PORT,()=>{
-console.log("Servidor rodando")
-})
+app.listen(PORT,()=>console.log("Servidor rodando"))
