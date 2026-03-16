@@ -50,7 +50,7 @@ imagem,
 texto
 })
 
-}catch{
+}catch(err){
 
 res.json({erro:"Erro ao buscar produto"})
 
