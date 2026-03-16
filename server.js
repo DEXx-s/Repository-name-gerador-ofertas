@@ -7,17 +7,19 @@ const app = express()
 
 const PORT = process.env.PORT || 3000
 
-// servir arquivos estáticos
 app.use(express.static(__dirname))
 
-// página inicial
 app.get("/", (req,res)=>{
-res.sendFile(path.join(__dirname, "index.html"))
+res.sendFile(path.join(__dirname,"index.html"))
+})
 
-// rota da oferta
 app.get("/oferta", async (req,res)=>{
 
 const url = req.query.url
+
+if(!url){
+return res.json({erro:"Informe o link"})
+}
 
 try{
 
@@ -60,7 +62,6 @@ res.json({erro:"Erro ao buscar produto"})
 
 })
 
-// iniciar servidor
 app.listen(PORT, ()=>{
 console.log("Servidor rodando")
 })
