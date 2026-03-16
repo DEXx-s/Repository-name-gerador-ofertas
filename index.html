@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta charset="UTF-8">
 <title>Gerador de Ofertas Shopee</title>
 
 <style>
 
 body{
-background:#0a0a0a;
-font-family:Arial;
+background:#000;
 color:white;
+font-family:Arial;
 text-align:center;
-padding:30px;
+padding:40px;
 }
 
 input{
@@ -19,30 +20,31 @@ width:80%;
 padding:12px;
 border-radius:8px;
 border:none;
+font-size:16px;
 }
 
 button{
-padding:12px 20px;
-border:none;
-border-radius:8px;
-margin-top:10px;
 background:#00c853;
 color:white;
+border:none;
+padding:12px 25px;
+border-radius:8px;
+font-size:16px;
 cursor:pointer;
+margin-top:10px;
 }
 
 .card{
 background:#1b5e20;
 padding:20px;
-border-radius:10px;
-margin-top:20px;
-text-align:left;
+margin-top:30px;
+border-radius:12px;
 }
 
 textarea{
 width:100%;
-height:200px;
-margin-top:10px;
+height:140px;
+margin-top:15px;
 }
 
 </style>
@@ -53,28 +55,38 @@ margin-top:10px;
 
 <h2>🔥 Gerador de Ofertas Shopee</h2>
 
-<input id="link" placeholder="Cole o link da Shopee">
+<input id="url" placeholder="Cole o link da Shopee">
 
 <br>
 
-<button onclick="gerar()">Gerar Oferta</button>
+<button onclick="gerarOferta()">Gerar Oferta</button>
 
 <div class="card">
 
-<div id="preview"></div>
+<div id="resultado"></div>
 
 <textarea id="texto"></textarea>
+
+<br>
 
 <button onclick="copiar()">Copiar</button>
 
 </div>
 
 <script>
+
 async function gerarOferta(){
 
 const url = document.getElementById("url").value
 
-const res = await fetch("/oferta?url=" + encodeURIComponent(url))
+if(!url){
+alert("Cole o link da Shopee")
+return
+}
+
+const api = "/oferta?url=" + encodeURIComponent(url)
+
+const res = await fetch(api)
 
 const data = await res.json()
 
@@ -82,8 +94,23 @@ const nome = data.title || "Produto Shopee"
 const preco = data.price || "Ver preço no link"
 const imagem = data.image || ""
 
-const texto =
-`🛍️ ${nome}
+document.getElementById("resultado").innerHTML = `
+
+<h3>🛍️ ${nome}</h3>
+
+${imagem ? `<img src="${imagem}" width="150">` : ""}
+
+<p>❌ De: -</p>
+<p>✅ Por: ${preco}</p>
+
+<p>🛒✨ COMPRE AQUI</p>
+<a href="${url}" target="_blank">${url}</a>
+
+<p>⚠️ Promoção sujeita a alteração a qualquer momento.</p>
+
+`
+
+const texto = `🛍️ ${nome}
 
 ❌ De: -
 ✅ Por: ${preco}
@@ -93,21 +120,23 @@ ${url}
 
 ⚠️ Promoção sujeita a alteração a qualquer momento.`
 
-document.getElementById("resultado").innerText = texto
-
-document.getElementById("card").innerHTML = `
-<h3>🛍️ ${nome}</h3>
-
-${imagem ? `<img src="${imagem}" style="width:120px;border-radius:10px;">` : ""}
-
-<p>❌ De: -</p>
-<p>✅ Por: ${preco}</p>
-
-<p>🛒✨ COMPRE AQUI</p>
-<a href="${url}" target="_blank">${url}</a>
-
-<p>⚠️ Promoção sujeita a alteração a qualquer momento.</p>
-`
+document.getElementById("texto").value = texto
 
 }
+
+function copiar(){
+
+const t = document.getElementById("texto")
+
+t.select()
+
+document.execCommand("copy")
+
+alert("Oferta copiada")
+
+}
+
 </script>
+
+</body>
+</html>
