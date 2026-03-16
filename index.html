@@ -85,22 +85,30 @@ margin-top:15px;
 
 async function gerar(){
 
-const url = document.getElementById("link").value
+const urlOriginal = document.getElementById("link").value
 const precoAntigo = document.getElementById("precoAntigo").value
 const precoNovo = document.getElementById("precoNovo").value
 
-if(!url){
-alert("Cole o link da Shopee")
+if(!urlOriginal){
+alert("Cole o link")
 return
 }
 
 try{
 
-const res = await fetch("https://api.microlink.io/?url="+encodeURIComponent(url))
+// pega o link final
+const redirect = await fetch(urlOriginal,{
+method:"GET",
+redirect:"follow"
+})
+
+const urlFinal = redirect.url
+
+// pega preview do produto
+const res = await fetch("https://api.microlink.io/?url="+encodeURIComponent(urlFinal))
 const data = await res.json()
 
 const nome = data.data.title || "Produto Shopee"
-const imagem = data.data.image?.url || ""
 
 const texto = `🛍️ ${nome}
 
@@ -108,7 +116,7 @@ const texto = `🛍️ ${nome}
 ✅ Por: R$ ${precoNovo}
 
 🛒✨ COMPRE AQUI
-${url}
+${urlOriginal}
 
 ⚠️ Promoção sujeita a alteração a qualquer momento.`
 
@@ -116,15 +124,14 @@ document.getElementById("texto").value = texto
 
 document.getElementById("preview").innerHTML = `
 <h3>${nome}</h3>
-${imagem ? `<img src="${imagem}" width="120">` : ""}
 <p>❌ De: R$ ${precoAntigo}</p>
 <p>✅ Por: R$ ${precoNovo}</p>
-<a href="${url}" target="_blank">🛒 Comprar</a>
+<a href="${urlOriginal}" target="_blank">🛒 Comprar</a>
 `
 
 }catch(e){
 
-alert("Erro ao pegar dados do produto")
+alert("Erro ao pegar produto")
 
 }
 
