@@ -11,26 +11,26 @@ const url = req.query.url
 
 try{
 
-const response = await fetch(url)
+const response = await fetch(url,{
+headers:{
+"User-Agent":
+"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
+}
+})
 
 const html = await response.text()
 
 const titleMatch = html.match(/property="og:title" content="([^"]+)"/)
 const imageMatch = html.match(/property="og:image" content="([^"]+)"/)
-
-let priceMatch = html.match(/R\$ ?\d+,\d+/)
+const priceMatch = html.match(/R\$ ?\d+,\d+/)
 
 const title = titleMatch ? titleMatch[1] : "Produto Shopee"
 const image = imageMatch ? imageMatch[1] : ""
 const price = priceMatch ? priceMatch[0] : ""
 
-res.json({
-title,
-image,
-price
-})
+res.json({title,image,price})
 
-}catch(err){
+}catch(e){
 
 res.json({
 title:"Erro ao pegar produto",
