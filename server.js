@@ -10,15 +10,11 @@ app.get("/oferta", async (req,res)=>{
 
 const url = req.query.url
 
-if(!url){
-return res.json({erro:"URL não enviada"})
-}
-
 try{
 
 const browser = await puppeteer.launch({
-headless: "new",
-args: [
+headless:true,
+args:[
 "--no-sandbox",
 "--disable-setuid-sandbox",
 "--disable-dev-shm-usage",
@@ -28,9 +24,9 @@ args: [
 
 const page = await browser.newPage()
 
-await page.goto(url,{waitUntil:"networkidle2"})
+await page.goto(url,{waitUntil:"domcontentloaded"})
 
-await page.waitForTimeout(5000)
+await page.waitForTimeout(6000)
 
 const data = await page.evaluate(()=>{
 
@@ -43,10 +39,10 @@ document.querySelector("meta[property='og:image']")?.content || ""
 
 let price = ""
 
-const possible = document.body.innerText.match(/R\$ ?\d+,\d+/)
+const prices = document.body.innerText.match(/R\$ ?\d+,\d+/g)
 
-if(possible){
-price = possible[0]
+if(prices){
+price = prices[0]
 }
 
 return{
@@ -61,10 +57,10 @@ await browser.close()
 
 res.json(data)
 
-}catch(err){
+}catch(e){
 
 res.json({
-title:"Erro ao ler produto",
+title:"Erro ao pegar produto",
 price:"",
 image:""
 })
