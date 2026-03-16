@@ -10,36 +10,43 @@ app.get("/oferta", async (req,res)=>{
 
 const url = req.query.url
 
+if(!url){
+return res.json({erro:"URL não enviada"})
+}
+
 try{
 
 const browser = await puppeteer.launch({
-args: ['--no-sandbox','--disable-setuid-sandbox']
+headless: "new",
+args: [
+"--no-sandbox",
+"--disable-setuid-sandbox",
+"--disable-dev-shm-usage",
+"--disable-gpu"
+]
 })
 
 const page = await browser.newPage()
 
-await page.goto(url,{waitUntil:"domcontentloaded"})
+await page.goto(url,{waitUntil:"networkidle2"})
 
-await page.waitForTimeout(4000)
+await page.waitForTimeout(5000)
 
 const data = await page.evaluate(()=>{
 
 const title =
 document.querySelector("meta[property='og:title']")?.content ||
-document.title ||
-"Produto Shopee"
+document.title
 
 const image =
 document.querySelector("meta[property='og:image']")?.content || ""
 
 let price = ""
 
-const priceElement =
-document.querySelector("[class*='price']") ||
-document.querySelector("[class*='Price']")
+const possible = document.body.innerText.match(/R\$ ?\d+,\d+/)
 
-if(priceElement){
-price = priceElement.innerText
+if(possible){
+price = possible[0]
 }
 
 return{
@@ -54,10 +61,10 @@ await browser.close()
 
 res.json(data)
 
-}catch(e){
+}catch(err){
 
 res.json({
-title:"Produto Shopee",
+title:"Erro ao ler produto",
 price:"",
 image:""
 })
