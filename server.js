@@ -7,30 +7,51 @@ app.use(express.static(__dirname))
 
 app.get("/oferta", async (req,res)=>{
 
-const url = req.query.url
+const shortUrl = req.query.url
 
 try{
 
-const response = await fetch(url,{
+// resolve link curto
+const redirect = await fetch(shortUrl,{redirect:"follow"})
+const finalUrl = redirect.url
+
+// pega html da página final
+const response = await fetch(finalUrl,{
 headers:{
-"User-Agent":
-"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
+"user-agent":
+"Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
 }
 })
 
 const html = await response.text()
 
-const titleMatch = html.match(/property="og:title" content="([^"]+)"/)
-const imageMatch = html.match(/property="og:image" content="([^"]+)"/)
-const priceMatch = html.match(/R\$ ?\d+,\d+/)
+// pega dados JSON da página
+const jsonMatch = html.match(/<script type="application\/ld\+json">(.*?)<\/script>/)
 
-const title = titleMatch ? titleMatch[1] : "Produto Shopee"
-const image = imageMatch ? imageMatch[1] : ""
-const price = priceMatch ? priceMatch[0] : ""
+let title=""
+let image=""
+let price=""
 
-res.json({title,image,price})
+if(jsonMatch){
 
-}catch(e){
+const data = JSON.parse(jsonMatch[1])
+
+title = data.name || ""
+image = data.image || ""
+price = data.offers?.price
+? "R$ " + data.offers.price
+: ""
+
+}
+
+res.json({
+title,
+image,
+price,
+url:finalUrl
+})
+
+}catch(err){
 
 res.json({
 title:"Erro ao pegar produto",
@@ -42,6 +63,4 @@ image:""
 
 })
 
-app.listen(PORT,()=>{
-console.log("Servidor rodando")
-})
+app.listen(PORT,()=>console.log("Servidor rodando"))
