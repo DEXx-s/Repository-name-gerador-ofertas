@@ -1,18 +1,3 @@
-const express = require("express")
-const axios = require("axios")
-const cheerio = require("cheerio")
-const path = require("path")
-
-const app = express()
-
-const PORT = process.env.PORT || 3000
-
-app.use(express.static(__dirname))
-
-app.get("/", (req,res)=>{
-res.sendFile(path.join(__dirname,"index.html"))
-})
-
 app.get("/oferta", async (req,res)=>{
 
 const url = req.query.url
@@ -20,7 +5,6 @@ const url = req.query.url
 try{
 
 const response = await axios.get(url,{
-maxRedirects:5,
 headers:{
 "User-Agent":"Mozilla/5.0"
 }
@@ -28,42 +12,38 @@ headers:{
 
 const html = response.data
 
-const $ = cheerio.load(html)
+// pegar JSON interno da Shopee
+const jsonMatch = html.match(/window.__INITIAL_STATE__ = (.*?);/)
 
-const nome =
-$('meta[property="og:title"]').attr("content") ||
-$("title").text()
+let precoAtual = ""
+let precoOriginal = ""
+let nome = ""
+let imagem = ""
 
-const imagem =
-$('meta[property="og:image"]').attr("content")
+if(jsonMatch){
 
-// detectar preços
-let precoAtual =
-$(".pdp-price").text() ||
-$('[class*="price"]').first().text()
+const data = JSON.parse(jsonMatch[1])
 
-let precoOriginal =
-$('[class*="original"]').first().text()
+const produto = data.item
 
-function limpar(p){
+nome = produto.name
 
-if(!p) return null
+imagem = "https://cf.shopee.com.br/file/" + produto.image
 
-return parseFloat(
-p.replace("R$","")
-.replace(/\./g,"")
-.replace(",",".")
-.trim()
-)
+precoAtual = "R$ " + (produto.price/100000).toFixed(2)
+
+precoOriginal = produto.price_before_discount
+? "R$ " + (produto.price_before_discount/100000).toFixed(2)
+: ""
 
 }
 
-const atual = limpar(precoAtual)
-const original = limpar(precoOriginal)
-
 let desconto = ""
 
-if(atual && original){
+if(precoOriginal){
+
+const atual = parseFloat(precoAtual.replace("R$",""))
+const original = parseFloat(precoOriginal.replace("R$",""))
 
 const off = Math.round((1 - atual/original)*100)
 
@@ -71,12 +51,6 @@ desconto = off + "% OFF"
 
 }
 
-// detectar cupom
-let cupom =
-$('[class*="voucher"]').first().text() ||
-"Ver cupom na página"
-
-// reduzir link
 const linkCurto = url.split("?")[0]
 
 const texto = `🔥 SUPER OFERTA SHOPEE
@@ -84,11 +58,9 @@ const texto = `🔥 SUPER OFERTA SHOPEE
 ${nome}
 
 💰 De: ${precoOriginal || "-"}
-💸 Por: ${precoAtual || "Ver preço no link"}
+💸 Por: ${precoAtual}
 
 🔥 ${desconto}
-
-🎟 Cupom: ${cupom}
 
 🛒 Comprar agora 👇
 ${linkCurto}
@@ -101,7 +73,6 @@ imagem,
 precoAtual,
 precoOriginal,
 desconto,
-cupom,
 texto
 })
 
@@ -111,8 +82,4 @@ res.json({erro:"Erro ao buscar produto"})
 
 }
 
-})
-
-app.listen(PORT, ()=>{
-console.log("Servidor rodando")
 })
