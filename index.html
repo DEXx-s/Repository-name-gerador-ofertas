@@ -90,16 +90,17 @@ const precoAntigo = document.getElementById("precoAntigo").value
 const precoNovo = document.getElementById("precoNovo").value
 
 if(!url){
-alert("Cole o link")
+alert("Cole o link da Shopee")
 return
 }
 
 try{
 
-const res = await fetch("/produto?url="+encodeURIComponent(url))
+const res = await fetch("https://api.microlink.io/?url="+encodeURIComponent(url))
 const data = await res.json()
 
-const nome = data.titulo || "Produto Shopee"
+const nome = data.data.title || "Produto Shopee"
+const imagem = data.data.image?.url || ""
 
 const texto = `🛍️ ${nome}
 
@@ -115,6 +116,7 @@ document.getElementById("texto").value = texto
 
 document.getElementById("preview").innerHTML = `
 <h3>${nome}</h3>
+${imagem ? `<img src="${imagem}" width="120">` : ""}
 <p>❌ De: R$ ${precoAntigo}</p>
 <p>✅ Por: R$ ${precoNovo}</p>
 <a href="${url}" target="_blank">🛒 Comprar</a>
@@ -122,31 +124,10 @@ document.getElementById("preview").innerHTML = `
 
 }catch(e){
 
-alert("Erro ao gerar oferta")
+alert("Erro ao pegar dados do produto")
 
 }
-
-}
-
-function copiar(){
-
-const textarea = document.getElementById("texto")
-textarea.select()
-document.execCommand("copy")
-
-alert("Oferta copiada")
-
-}
-
-function whatsapp(){
-
-const texto = encodeURIComponent(document.getElementById("texto").value)
-
-window.open("https://wa.me/?text="+texto)
 
 }
 
 </script>
-
-</body>
-</html>
