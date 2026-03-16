@@ -3,7 +3,7 @@ const puppeteer = require("puppeteer")
 
 const app = express()
 
-app.use(express.static("public"))
+app.use(express.static("."))
 
 app.get("/produto", async (req,res)=>{
 
@@ -12,18 +12,18 @@ const url = req.query.url
 try{
 
 const browser = await puppeteer.launch({
-args:["--no-sandbox"]
+args:["--no-sandbox","--disable-setuid-sandbox"]
 })
 
 const page = await browser.newPage()
 
 await page.goto(url,{waitUntil:"domcontentloaded"})
 
-await page.waitForTimeout(4000)
+await page.waitForTimeout(5000)
 
 const data = await page.evaluate(()=>{
 
-let titulo = document.querySelector("title")?.innerText || ""
+let titulo = document.title || ""
 
 let preco = document.body.innerText.match(/R\$ ?[0-9]+[,\.][0-9]+/)
 
@@ -53,6 +53,8 @@ imagem:""
 
 })
 
-app.listen(3000,()=>{
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT,()=>{
 console.log("Servidor rodando")
 })
