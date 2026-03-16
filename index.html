@@ -1,48 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Gerador de Ofertas Shopee</title>
+
+<style>
+
+body{
+background:#0f0f0f;
+font-family:Arial;
+color:white;
+text-align:center;
+padding:30px;
+}
+
+.container{
+max-width:600px;
+margin:auto;
+}
+
+input{
+width:100%;
+padding:15px;
+font-size:16px;
+border-radius:6px;
+border:none;
+margin-bottom:15px;
+}
+
+button{
+border:none;
+padding:15px 20px;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+margin:5px;
+}
+
+.gerar{
+background:#00c853;
+color:white;
+}
+
+.copy{
+background:#2962ff;
+color:white;
+}
+
+.whats{
+background:#25D366;
+color:white;
+}
+
+.telegram{
+background:#0088cc;
+color:white;
+}
+
+.card{
+background:white;
+color:black;
+padding:20px;
+border-radius:10px;
+margin-top:20px;
+}
+
+img{
+max-width:200px;
+border-radius:10px;
+margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🔥 Gerador de Ofertas Shopee</h2>
+
+<input id="link" placeholder="Cole o link da Shopee">
+
+<button class="gerar" onclick="gerarOferta()">Gerar Oferta</button>
+
+<div class="card" id="card" style="display:none">
+
+<h3 id="nome"></h3>
+
+<img id="imagem">
+
+<p id="preco"></p>
+
+<p id="cupom"></p>
+
+<p id="desconto"></p>
+
+<textarea id="texto" style="width:100%;height:150px"></textarea>
+
+<br>
+
+<button class="copy" onclick="copiar()">Copiar</button>
+
+<button class="whats" onclick="whatsapp()">WhatsApp</button>
+
+<button class="telegram" onclick="telegram()">Telegram</button>
+
+</div>
+
+</div>
+
 <script>
 
 async function gerarOferta(){
 
-const campo = document.getElementById("link")
-const links = campo.value.split("\n")
+const link = document.getElementById("link").value
 
-let resultado = ""
-
-for(let link of links){
-
-link = link.trim()
-
-if(!link) continue
-
-try{
+if(!link){
+alert("Cole o link")
+return
+}
 
 const resposta = await fetch(`/oferta?url=${encodeURIComponent(link)}`)
+
 const dados = await resposta.json()
 
-if(dados.erro){
-resultado += "Erro ao gerar oferta\n\n"
-continue
-}
+document.getElementById("card").style.display="block"
 
-resultado += dados.texto + "\n\n----------------------\n\n"
+document.getElementById("nome").innerText = dados.nome
 
-}catch(e){
+document.getElementById("imagem").src = dados.imagem
 
-resultado += "Erro ao conectar servidor\n\n"
+document.getElementById("preco").innerText =
+`💰 De: ${dados.precoOriginal} | Por: ${dados.precoAtual}`
 
-}
+document.getElementById("desconto").innerText =
+`🔥 ${dados.desconto}`
 
-}
+document.getElementById("cupom").innerText =
+`🎟 Cupom: ${dados.cupom}`
 
-document.getElementById("resultado").value = resultado
+document.getElementById("texto").value = dados.texto
 
 }
 
 function copiar(){
 
-const texto = document.getElementById("resultado")
+const texto = document.getElementById("texto")
 
 texto.select()
-texto.setSelectionRange(0,99999)
 
 document.execCommand("copy")
 
@@ -50,4 +158,27 @@ alert("Oferta copiada!")
 
 }
 
+function whatsapp(){
+
+const texto = document.getElementById("texto").value
+
+window.open(
+`https://wa.me/?text=${encodeURIComponent(texto)}`
+)
+
+}
+
+function telegram(){
+
+const texto = document.getElementById("texto").value
+
+window.open(
+`https://t.me/share/url?text=${encodeURIComponent(texto)}`
+)
+
+}
+
 </script>
+
+</body>
+</html>
