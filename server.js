@@ -12,7 +12,7 @@ app.use(express.static(__dirname))
 
 // página inicial
 app.get("/", (req,res)=>{
-res.send("Servidor funcionando 🚀")
+res.sendFile(__dirname + "/index.html")
 })
 
 // rota da oferta
