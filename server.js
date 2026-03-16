@@ -17,30 +17,73 @@ app.get("/oferta", async (req,res)=>{
 
 const url = req.query.url
 
-if(!url){
-return res.json({erro:"Informe o link"})
-}
-
 try{
 
-const {data} = await axios.get(url)
+const response = await axios.get(url,{
+maxRedirects:5,
+headers:{
+"User-Agent":"Mozilla/5.0"
+}
+})
 
-const $ = cheerio.load(data)
+const html = response.data
 
-const nome = $('meta[property="og:title"]').attr("content")
-const imagem = $('meta[property="og:image"]').attr("content")
+const $ = cheerio.load(html)
 
-let preco = $(".pdp-price").first().text()
+const nome =
+$('meta[property="og:title"]').attr("content") ||
+$("title").text()
 
-if(!preco){
-preco = "Ver preço no link"
+const imagem =
+$('meta[property="og:image"]').attr("content")
+
+let precoAtual =
+$(".pdp-price").first().text() ||
+$('[class*="price"]').first().text()
+
+let precoOriginal =
+$(".pdp-price-original").first().text() ||
+$('[class*="original"]').first().text()
+
+let cupom =
+$('[class*="voucher"]').first().text() ||
+"Possível cupom na página"
+
+function limparPreco(p){
+
+if(!p) return null
+
+return parseFloat(
+p.replace("R$","")
+.replace(/\./g,"")
+.replace(",",".")
+.trim()
+)
+
+}
+
+const atual = limparPreco(precoAtual)
+const original = limparPreco(precoOriginal)
+
+let desconto = ""
+
+if(atual && original){
+
+const off = Math.round((1 - atual/original)*100)
+
+desconto = `${off}% OFF`
 }
 
 const texto = `🔥 SUPER OFERTA SHOPEE
 
 ${nome}
 
-💰 Preço: ${preco}
+💰 De: ${precoOriginal || "-"}
+💸 Por: ${precoAtual}
+
+🎟 Cupom: ${cupom}
+
+🔥 ${desconto}
 
 🛒 Comprar agora 👇
 ${url}
@@ -49,14 +92,19 @@ ${url}
 
 res.json({
 nome,
-preco,
+precoAtual,
+precoOriginal,
+desconto,
+cupom,
 imagem,
 texto
 })
 
 }catch(err){
 
-res.json({erro:"Erro ao buscar produto"})
+res.json({
+erro:"Erro ao buscar produto"
+})
 
 }
 
