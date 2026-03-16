@@ -1,102 +1,29 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Gerador por Imagem</title>
-
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
-
-<style>
-
-body{
-background:#000;
-color:#fff;
-font-family:Arial;
-text-align:center;
-padding:20px;
-}
-
-.card{
-background:#fff;
-color:#000;
-padding:20px;
-border-radius:10px;
-margin-top:20px;
-}
-
-button{
-padding:12px 20px;
-border:none;
-border-radius:8px;
-margin:5px;
-cursor:pointer;
-}
-
-textarea{
-width:100%;
-height:200px;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<h2>🔥 Gerador de Oferta por Imagem</h2>
-
-<input type="file" id="imagem">
-
-<br><br>
-
-<button onclick="lerImagem()">Ler Imagem</button>
-
-<div class="card">
-
-<textarea id="resultado"></textarea>
-
-<br>
-
-<button onclick="copiar()">Copiar</button>
-
-</div>
-
 <script>
 
-async function lerImagem(){
+async function gerarOferta(){
 
-const file = document.getElementById("imagem").files[0]
+const url = document.getElementById("link").value
 
-if(!file){
-alert("Selecione uma imagem")
+const res = await fetch("/oferta?url="+encodeURIComponent(url))
+
+const data = await res.json()
+
+if(data.erro){
+alert("Erro ao gerar oferta")
 return
 }
 
-const { data } = await Tesseract.recognize(
-file,
-'por'
-)
+const texto = `🛍️ ${data.nome}
 
-const texto = data.text
+❌ De: ${data.precoOriginal || "-"}
+✅ Por: ${data.precoAtual}
 
-let preco = texto.match(/R\$ ?[0-9,.]+/)
+🛒✨ COMPRE AQUI
+${data.link}
 
-if(preco){
-preco = preco[0]
-}else{
-preco = "Ver preço no link"
-}
+⚠️ Promoção sujeita a alteração a qualquer momento.`
 
-const oferta = `🔥 SUPER OFERTA SHOPEE
-
-💸 Por: ${preco}
-
-🛒 Comprar agora 👇
-(link do produto)
-
-⚡ Promoções mudam rápido`
-
-document.getElementById("resultado").value = oferta
+document.getElementById("resultado").value = texto
 
 }
 
@@ -108,11 +35,16 @@ txt.select()
 
 document.execCommand("copy")
 
-alert("Copiado")
+alert("Copiado!")
+
+}
+
+function whatsapp(){
+
+const texto = encodeURIComponent(document.getElementById("resultado").value)
+
+window.open("https://wa.me/?text="+texto)
 
 }
 
 </script>
-
-</body>
-</html>
