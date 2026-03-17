@@ -1,55 +1,101 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="pt-br">
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Gerador Shopee PRO</title>
+<title>Grupo VIP de Ofertas</title>
 
 <style>
 
 body{
-background:#000;
+margin:0;
+font-family:Arial, sans-serif;
+background:linear-gradient(180deg,#0f172a,#020617);
 color:white;
-font-family:Arial;
 text-align:center;
-padding:30px;
+padding:20px;
 }
 
-input{
-width:80%;
-padding:12px;
-margin:8px;
-border-radius:8px;
-border:none;
-}
-
-button{
-background:#00c853;
-border:none;
-padding:12px 20px;
-border-radius:8px;
-color:white;
-cursor:pointer;
+.container{
+max-width:400px;
+margin:auto;
 }
 
 .card{
-background:#1b5e20;
-padding:20px;
-margin-top:30px;
-border-radius:10px;
+background:linear-gradient(145deg,#111827,#1f2937);
+border-radius:20px;
+padding:25px;
+box-shadow:0 10px 30px rgba(0,0,0,0.6);
 }
 
-img{
-max-width:200px;
-margin-top:10px;
+h1{
+font-size:26px;
+margin-bottom:10px;
 }
 
-textarea{
-width:90%;
-height:160px;
-margin-top:10px;
+.vip{
+color:#facc15;
+font-weight:bold;
+}
+
+.subtitle{
+color:#cbd5e1;
+font-size:15px;
+margin-bottom:20px;
+}
+
+.benefits{
+text-align:left;
+margin:20px 0;
+}
+
+.benefits p{
+margin:10px 0;
+font-size:15px;
+}
+
+.cta{
+margin-top:25px;
+}
+
+button{
+width:100%;
+padding:18px;
+border:none;
+border-radius:50px;
+font-size:18px;
+font-weight:bold;
+background:linear-gradient(135deg,#22c55e,#16a34a);
+color:white;
+cursor:pointer;
+box-shadow:0 5px 20px rgba(34,197,94,0.6);
+}
+
+button:active{
+transform:scale(0.97);
+}
+
+.prova{
+margin-top:20px;
+font-size:14px;
+color:#94a3b8;
+}
+
+.contador{
+font-size:28px;
+color:#facc15;
+font-weight:bold;
+}
+
+.badge{
+margin-top:15px;
+background:#facc15;
+color:black;
+display:inline-block;
+padding:6px 12px;
+border-radius:20px;
+font-size:12px;
 }
 
 </style>
@@ -58,90 +104,64 @@ margin-top:10px;
 
 <body>
 
-<h2>🔥 Gerador de Ofertas Shopee</h2>
-
-<input id="link" placeholder="Cole o link da Shopee">
-
-<br>
-
-<input id="precoPromo" placeholder="Preço promocional">
-
-<br><br>
-
-<button onclick="gerar()">Gerar Oferta</button>
+<div class="container">
 
 <div class="card">
 
-<div id="preview"></div>
+<div class="badge">🔥 VAGAS LIMITADAS</div>
 
-<textarea id="texto"></textarea>
+<h1>Grupo <span class="vip">VIP</span> de Ofertas</h1>
 
-<br><br>
+<p class="subtitle">
+Entre agora e receba promoções com até 80% OFF direto no WhatsApp
+</p>
 
-<button onclick="copiar()">Copiar</button>
+<div class="benefits">
 
-<button onclick="whatsapp()">Enviar WhatsApp</button>
+<p>⚡ Ofertas relâmpago todos os dias</p>
+<p>🎟️ Cupons exclusivos</p>
+<p>💰 Produtos com preço de atacado</p>
+<p>🚚 Frete grátis em várias ofertas</p>
+
+</div>
+
+<div class="cta">
+
+<button onclick="entrar()">
+🚀 QUERO ENTRAR NO GRUPO AGORA
+</button>
+
+</div>
+
+<div class="prova">
+
+<div class="contador" id="contador">+438</div>
+pessoas já estão economizando
+
+</div>
+
+</div>
 
 </div>
 
 <script>
 
-async function gerar(){
+// seu link do grupo aqui
+const linkGrupo = "https://chat.whatsapp.com/EeGCo14giB34USFNg5bbmb?mode=gi_t"
 
-const url = document.getElementById("link").value
-const precoPromo = document.getElementById("precoPromo").value
-
-const res = await fetch("/produto?url="+encodeURIComponent(url))
-const data = await res.json()
-
-const titulo = data.titulo || "Produto Shopee"
-const precoOriginal = data.preco || ""
-const img = data.imagem || ""
-
-const texto = `🛍️ ${titulo}
-
-💰 De: ${precoOriginal}
-🔥 Por: R$ ${precoPromo}
-
-🛒 COMPRE AQUI
-${url}
-
-⚠️ Promoção sujeita a alteração.`
-
-document.getElementById("texto").value = texto
-
-document.getElementById("preview").innerHTML = `
-<h3>${titulo}</h3>
-<img src="${img}">
-<p>💰 De: ${precoOriginal}</p>
-<p>🔥 Por: R$ ${precoPromo}</p>
-<a href="${url}" target="_blank">🛒 Comprar</a>
-`
-
+function entrar(){
+window.open(linkGrupo)
 }
 
-function copiar(){
+// contador fake dinâmico (aumenta sozinho)
+let numero = 438
 
-const t = document.getElementById("texto")
-
-t.select()
-
-document.execCommand("copy")
-
-alert("Oferta copiada")
-
-}
-
-function whatsapp(){
-
-const txt = encodeURIComponent(document.getElementById("texto").value)
-
-window.open("https://wa.me/?text="+txt)
-
-}
+setInterval(()=>{
+numero += Math.floor(Math.random()*3)
+document.getElementById("contador").innerText = "+"+numero
+},3000)
 
 </script>
 
 </body>
-
 </html>
