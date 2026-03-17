@@ -6,17 +6,10 @@
 <title>Grupo VIP</title>
 
 <style>
-.imagem{
-  width:100%;
-  border-radius:15px;
-  margin:15px 0;
-  box-shadow:0 0 20px rgba(0,255,100,0.4);
-}
 body{
   margin:0;
-  font-family: Arial;
-  background: linear-gradient(180deg,#000000,#001a0f);
-  color:#fff;
+  font-family: Arial, sans-serif;
+  background:#f5f5f5;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -24,140 +17,95 @@ body{
 }
 
 .container{
-  width:90%;
+  width:95%;
   max-width:400px;
-  background: linear-gradient(180deg,#020617,#001a0f);
+  background:#ffffff;
   padding:25px;
   border-radius:25px;
   text-align:center;
-  box-shadow:0 0 40px rgba(0,255,100,0.3);
+  box-shadow:0 10px 30px rgba(0,0,0,0.1);
 }
 
+/* ALERTA TOPO */
 .topo{
-  background: linear-gradient(90deg,#ff0000,#ff3c3c);
+  background:#ff3b3b;
+  color:#fff;
   padding:10px;
   border-radius:20px;
-  font-size:12px;
+  font-size:13px;
   margin-bottom:15px;
   font-weight:bold;
 }
 
+/* TITULO */
 h1{
-  font-size:30px;
+  font-size:26px;
+  color:#111;
   margin-bottom:10px;
 }
 
+/* TEXTO */
+p{
+  color:#555;
+  font-size:15px;
+}
+
 .destaque{
-  color:#00ff88;
+  color:#00c853;
   font-weight:bold;
 }
 
+/* TIMER */
+.timer{
+  margin:10px 0;
+  color:#ff9800;
+  font-weight:bold;
+}
+
+/* LISTA */
 .lista{
   text-align:left;
-  margin:20px 0;
+  margin:15px 0;
+  font-size:14px;
+  color:#333;
   line-height:1.6;
 }
 
-.timer{
-  color:#ffea00;
-  font-size:18px;
-  margin:15px 0;
-}
-
+/* BOTÃO */
 button{
   width:100%;
-  padding:18px;
+  padding:15px;
   border:none;
-  border-radius:40px;
-  background: linear-gradient(90deg,#00ff88,#00c853);
+  border-radius:50px;
+  background:linear-gradient(90deg,#00c853,#00ff95);
   color:#000;
-  font-size:18px;
+  font-size:16px;
   font-weight:bold;
   cursor:pointer;
-  box-shadow:0 0 25px rgba(0,255,100,0.6);
-  margin-top:10px;
+  box-shadow:0 10px 20px rgba(0,255,100,0.3);
+  transition:0.3s;
 }
 
 button:hover{
   transform:scale(1.05);
 }
 
+/* IMAGEM */
+.imagem{
+  width:100%;
+  border-radius:15px;
+  margin-bottom:15px;
+}
+
+/* NOTIFICAÇÃO */
 .notificacao{
-  margin-top:12px;
+  margin-top:10px;
   font-size:12px;
-  opacity:0.8;
+  color:#777;
+}
+
+/* MOBILE AJUSTE */
+@media(max-width:400px){
+  h1{font-size:22px;}
 }
 </style>
-</head>
-
-<body>
-
-<div class="container">
-
-<img src="https://imgur.com/a/CVIC2qr" class="imagem">
-
-<div class="topo">💥 ÚLTIMAS VAGAS (GRUPO QUASE LOTADO)</div>
-
-<h1>🔥 Grupo VIP de Ofertas</h1>
-
-<p>
-<span class="destaque">Até 80% OFF</span> direto no seu WhatsApp todos os dias
-</p>
-
-<div class="timer">
-⏳ Vagas acabando em <span id="timer">03:00</span>
-</div>
-
-<div class="lista">
-⚡ Ofertas antes de todo mundo <br>
-🎟️ Cupons secretos exclusivos <br>
-💰 Preços absurdamente baixos <br>
-🚚 Frete grátis todos os dias <br>
-🔥 Produtos virais que esgotam rápido
-</div>
-
-<button onclick="entrar()">🚀 ENTRAR NO GRUPO VIP AGORA</button>
-
-<div class="notificacao" id="notificacao">
-🟢 João acabou de entrar no grupo
-</div>
-
-</div>
-
-<script>
-// BOTÃO
-function entrar(){
-  window.location.href = "https://chat.whatsapp.com/EeGCo14giB34USFNg5bbmb?mode=gi_t"
-}
-
-// TIMER
-let tempo = 180
-
-setInterval(()=>{
-  tempo--
-
-  let min = Math.floor(tempo/60)
-  let sec = tempo % 60
-
-  document.getElementById("timer").innerText =
-    `${min}:${sec < 10 ? "0"+sec : sec}`
-
-  if(tempo <= 0){
-    tempo = 180
-  }
-
-},1000)
-
-// PROVA SOCIAL
-const nomes = ["Maria","João","Carlos","Ana","Lucas","Fernanda","Pedro","Juliana"]
-
-setInterval(()=>{
-  const nome = nomes[Math.floor(Math.random()*nomes.length)]
-  document.getElementById("notificacao").innerText =
-    `🟢 ${nome} acabou de entrar no grupo`
-},3000)
-
-</script>
-
-</body>
-</html>
