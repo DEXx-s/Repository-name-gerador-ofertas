@@ -1,29 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grupo VIP de Ofertas</title>
+
+<style>
+body{
+  margin:0;
+  font-family: Arial;
+  background:#000;
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.container{
+  width:90%;
+  max-width:400px;
+  background:#050816;
+  padding:25px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 0 30px rgba(0,255,100,0.2);
+}
+
+.topo{
+  background:red;
+  padding:8px;
+  border-radius:10px;
+  font-size:12px;
+  margin-bottom:15px;
+}
+
+h1{
+  font-size:28px;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border-radius:10px;
+  border:none;
+}
+
+button{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:30px;
+  background:#00c853;
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+.timer{
+  color:yellow;
+  margin:10px 0;
+}
+
+.notificacao{
+  margin-top:10px;
+  font-size:12px;
+  opacity:0.8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="topo">💥 ÚLTIMAS VAGAS (GRUPO QUASE LOTADO)</div>
+
+<h1>🔥 Grupo VIP de Ofertas</h1>
+
+<p>Até 80% OFF todos os dias no WhatsApp</p>
+
+<div class="timer">⏳ Restam <span id="timer">3:00</span></div>
+
+<input type="text" id="nome" placeholder="Digite seu nome">
+<input type="text" id="numero" placeholder="Seu WhatsApp">
+
+<button onclick="entrar()">🚀 GARANTIR MINHA VAGA</button>
+
+<div class="notificacao" id="notificacao">🟢 Alguém acabou de entrar no grupo</div>
+
+</div>
+
 <script>
-function entrarGrupo(){
+// BOTÃO
+function entrar(){
 
-  const nome = document.querySelector('input[placeholder="Digite seu nome"]').value
-  const numero = document.querySelector('input[placeholder="Seu WhatsApp"]').value
+  const nome = document.getElementById("nome").value
+  const numero = document.getElementById("numero").value
 
-  if(!nome || !numero){
+  if(nome === "" || numero === ""){
     alert("Preencha os dados")
     return
   }
 
-  const grupo = "https://chat.whatsapp.com/SEU-LINK-AQUI"
+  const grupo = "https://chat.whatsapp.com/EeGCo14giB34USFNg5bbmb?mode=gi_t"
 
-  // mensagem automática
-  const msg = `Olá! Meu nome é ${nome} e quero entrar no grupo VIP 🔥`
+  const msg = `Olá! Me chamo ${nome} e quero entrar no grupo VIP 🔥`
 
   const url = `https://wa.me/?text=${encodeURIComponent(msg)}`
 
-  // abre whatsapp + grupo
   window.open(url, "_blank")
 
   setTimeout(()=>{
     window.location.href = grupo
-  }, 1500)
+  },1500)
 }
-<script>
+
+// TIMER
 let tempo = 180
 
 setInterval(()=>{
@@ -32,22 +127,25 @@ setInterval(()=>{
   let min = Math.floor(tempo/60)
   let sec = tempo % 60
 
-  document.querySelector("#timer").innerText = `${min}:${sec < 10 ? "0"+sec : sec}`
+  document.getElementById("timer").innerText =
+    `${min}:${sec < 10 ? "0"+sec : sec}`
 
   if(tempo <= 0){
     tempo = 180
   }
 
 },1000)
-</script>
 
-<span id="timer">3:00</span>
-
-<script>
+// PROVA SOCIAL
 const nomes = ["Maria","João","Carlos","Ana","Lucas","Fernanda","Pedro"]
 
 setInterval(()=>{
   const nome = nomes[Math.floor(Math.random()*nomes.length)]
-  document.querySelector("#notificacao").innerText = `${nome} acabou de entrar no grupo`
+  document.getElementById("notificacao").innerText =
+    `🟢 ${nome} acabou de entrar no grupo`
 },3000)
+
 </script>
+
+</body>
+</html>
