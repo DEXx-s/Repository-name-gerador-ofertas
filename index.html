@@ -7,49 +7,48 @@
 
 <title>Grupo VIP de Ofertas</title>
 
+<!-- 🔥 PIXEL (COLOCA O SEU AQUI) -->
+<!-- Facebook Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){
+if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)
+}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+
+fbq('init', 'SEU_PIXEL_AQUI');
+fbq('track', 'PageView');
+</script>
+
 <style>
 
 body{
 margin:0;
 font-family:Arial;
-background:radial-gradient(circle,#020617,#000);
+background:#000;
 color:white;
 text-align:center;
 padding:20px;
 }
 
-.container{
+.card{
+background:#020617;
+border-radius:20px;
+padding:25px;
+box-shadow:0 0 40px rgba(0,255,100,0.15);
 max-width:400px;
 margin:auto;
 }
 
-.card{
-background:linear-gradient(145deg,#020617,#0f172a);
-padding:25px;
-border-radius:20px;
-box-shadow:0 0 40px rgba(0,255,100,0.1);
-}
-
-h1{
-font-size:26px;
-}
-
-.vip{
-color:#22c55e;
-}
-
-.subtitle{
-color:#cbd5e1;
-font-size:14px;
-margin-bottom:15px;
-}
-
 .alert{
 background:#dc2626;
-padding:8px;
+padding:10px;
 border-radius:10px;
 font-size:13px;
-margin-bottom:10px;
 animation:pulse 1.5s infinite;
 }
 
@@ -59,18 +58,13 @@ animation:pulse 1.5s infinite;
 100%{opacity:1}
 }
 
+h1{
+margin-top:10px;
+}
+
 .timer{
-font-size:20px;
-margin:10px 0;
 color:#facc15;
-}
-
-.benefits{
-text-align:left;
-margin:20px 0;
-}
-
-.benefits p{
+font-size:18px;
 margin:10px 0;
 }
 
@@ -81,10 +75,10 @@ border:none;
 border-radius:50px;
 font-size:18px;
 font-weight:bold;
-background:linear-gradient(135deg,#22c55e,#16a34a);
+background:#22c55e;
 color:white;
 cursor:pointer;
-animation:glow 1.5s infinite;
+animation:glow 1.2s infinite;
 }
 
 @keyframes glow{
@@ -93,16 +87,22 @@ animation:glow 1.5s infinite;
 100%{box-shadow:0 0 10px #22c55e}
 }
 
-.prova{
+.leads{
 margin-top:15px;
-font-size:13px;
-color:#94a3b8;
 }
 
-.contador{
-font-size:26px;
-color:#22c55e;
-font-weight:bold;
+input{
+width:90%;
+padding:12px;
+margin-top:10px;
+border-radius:10px;
+border:none;
+}
+
+.fake{
+font-size:12px;
+margin-top:10px;
+color:#94a3b8;
 }
 
 </style>
@@ -111,81 +111,83 @@ font-weight:bold;
 
 <body>
 
-<div class="container">
-
 <div class="card">
 
 <div class="alert">
-🚨 ÚLTIMAS VAGAS DISPONÍVEIS
+🚨 ÚLTIMAS VAGAS (GRUPO QUASE LOTADO)
 </div>
 
-<h1>Grupo <span class="vip">VIP</span> de Ofertas</h1>
+<h1>🔥 Grupo VIP de Ofertas</h1>
 
-<p class="subtitle">
-Até <b>80% OFF</b> direto no seu WhatsApp todos os dias
-</p>
+<p>Até <b>80% OFF</b> todos os dias no WhatsApp</p>
 
-<div class="timer" id="timer">
-⏳ Carregando...
-</div>
+<div class="timer" id="timer"></div>
 
-<div class="benefits">
+<!-- CAPTURA LEAD -->
+<div class="leads">
 
-<p>⚡ Ofertas antes de todo mundo</p>
-<p>🎟️ Cupons secretos</p>
-<p>💰 Preços absurdamente baixos</p>
-<p>🚚 Frete grátis diário</p>
+<input id="nome" placeholder="Digite seu nome">
+<input id="whats" placeholder="Seu WhatsApp">
 
 </div>
+
+<br>
 
 <button onclick="entrar()">
-🔥 ENTRAR NO GRUPO AGORA
+🚀 GARANTIR MINHA VAGA
 </button>
 
-<div class="prova">
-<div class="contador" id="contador">+437</div>
-pessoas já entraram hoje
-</div>
-
+<div class="fake" id="fake">
+Carregando atividade...
 </div>
 
 </div>
 
 <script>
 
-// 🔗 COLOCA SEU LINK AQUI
 const linkGrupo = "https://chat.whatsapp.com/EeGCo14giB34USFNg5bbmb?mode=gi_t"
 
-// REDIRECIONA
-function entrar(){
-window.open(linkGrupo)
-}
-
-// CONTADOR DINÂMICO
-let pessoas = 437
-setInterval(()=>{
-pessoas += Math.floor(Math.random()*3)
-document.getElementById("contador").innerText = "+"+pessoas
-},2000)
-
-// TIMER URGÊNCIA
-let tempo = 300
+// TIMER
+let tempo = 180
 
 setInterval(()=>{
-
-let min = Math.floor(tempo / 60)
-let sec = tempo % 60
+let min = Math.floor(tempo/60)
+let sec = tempo%60
 
 document.getElementById("timer").innerText =
-"⏳ Vagas acabando em " + min + ":" + (sec<10?"0":"") + sec
+"⏳ Restam " + min + ":" + (sec<10?"0":"")+sec
 
 tempo--
+if(tempo <= 0) tempo = 180
+},1000)
 
-if(tempo <= 0){
-tempo = 300
+// FAKE LIVE
+const nomes = ["João","Maria","Carlos","Ana","Lucas","Pedro","Fernanda"]
+
+setInterval(()=>{
+let nome = nomes[Math.floor(Math.random()*nomes.length)]
+
+document.getElementById("fake").innerText =
+"🟢 "+nome+" acabou de entrar no grupo"
+},2000)
+
+// BOTÃO
+function entrar(){
+
+let nome = document.getElementById("nome").value
+let whats = document.getElementById("whats").value
+
+// DISPARA EVENTO PIXEL
+if(typeof fbq !== "undefined"){
+fbq('track','Lead')
 }
 
-},1000)
+// REDIRECIONA COM DELAY (AUMENTA CONVERSÃO)
+setTimeout(()=>{
+window.open(linkGrupo)
+},800)
+
+}
 
 </script>
 
