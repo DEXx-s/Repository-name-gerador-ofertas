@@ -7,37 +7,51 @@
 
 <style>
 body{
-  body{
   margin:0;
   font-family: Arial;
-  background:#f5f5f5;
+  background:linear-gradient(180deg,#ffffff,#f1f1f1);
 }
 
+/* CONTAINER PRINCIPAL */
 .container{
   width:100%;
-  min-height:100vh;
-  background:#ffffff;
-  padding:20px 15px 40px;
-  border-radius:0;
-  box-shadow:none;
+  max-width:500px;
+  margin:auto;
+  padding:20px;
 }
 
+/* IMAGEM */
+.imagem{
+  width:80px;
+  height:80px;
+  border-radius:50%;
+  display:block;
+  margin:20px auto;
+  object-fit:cover;
+}
+
+/* ALERTA */
 .topo{
   background:#ff3b3b;
   color:#fff;
-  padding:10px;
-  border-radius:20px;
+  padding:12px;
+  border-radius:50px;
   font-size:13px;
-  margin-bottom:15px;
+  margin-bottom:20px;
+  text-align:center;
   font-weight:bold;
 }
 
+/* TITULO */
 h1{
+  text-align:center;
   font-size:26px;
   color:#111;
 }
 
+/* TEXTO */
 p{
+  text-align:center;
   color:#555;
 }
 
@@ -46,77 +60,40 @@ p{
   font-weight:bold;
 }
 
+/* TIMER */
 .timer{
+  text-align:center;
   color:#ff9800;
   margin:10px 0;
+  font-weight:bold;
 }
 
+/* LISTA */
 .lista{
-  text-align:left;
-  margin:15px 0;
-  font-size:14px;
+  margin:20px 0;
+  font-size:15px;
   color:#333;
+  line-height:1.7;
 }
 
+/* BOTÃO */
 button{
   width:100%;
-  padding:15px;
+  padding:18px;
   border:none;
   border-radius:50px;
   background:linear-gradient(90deg,#00c853,#00ff95);
   color:#000;
-  font-size:16px;
+  font-size:17px;
   font-weight:bold;
+  box-shadow:0 10px 25px rgba(0,255,100,0.4);
 }
 
-.imagem{
-  width:100%;
-  border-radius:15px;
-  margin-bottom:15px;
-}
-
+/* NOTIFICAÇÃO */
 .notificacao{
-  margin-top:10px;
-  font-size:12px;
+  margin-top:12px;
+  text-align:center;
+  font-size:13px;
   color:#777;
 }
 </style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<img src="https://imgur.com/a/iSwuJTi.jpg" class="imagem">
-
-<div class="topo">💥 ÚLTIMAS VAGAS (QUASE LOTADO)</div>
-
-<h1>🔥 Grupo VIP de Ofertas</h1>
-
-<p><span class="destaque">Até 80% OFF</span> direto no seu WhatsApp</p>
-
-<div class="timer">⏳ Vagas acabando rápido</div>
-
-<div class="lista">
-⚡ Ofertas antes de todo mundo<br>
-🎟 Cupons exclusivos<br>
-💰 Preços absurdos<br>
-🚚 Frete grátis<br>
-🔥 Produtos virais
-</div>
-
-<button onclick="entrar()">🚀 GARANTIR MINHA VAGA</button>
-
-<div class="notificacao">🟢 João acabou de entrar</div>
-
-</div>
-
-<script>
-function entrar(){
-  window.location.href = "https://chat.whatsapp.com/EeGCo14giB34USFNg5bbmb?mode=gi_t";
-}
-</script>
-
-</body>
-</html>
