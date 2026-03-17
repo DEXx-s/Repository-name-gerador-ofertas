@@ -8,7 +8,7 @@
 <style>
 body{
   margin:0;
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   background:#f5f5f5;
   display:flex;
   justify-content:center;
@@ -19,14 +19,13 @@ body{
 .container{
   width:95%;
   max-width:400px;
-  background:#ffffff;
+  background:#fff;
   padding:25px;
   border-radius:25px;
   text-align:center;
   box-shadow:0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* ALERTA TOPO */
 .topo{
   background:#ff3b3b;
   color:#fff;
@@ -37,17 +36,13 @@ body{
   font-weight:bold;
 }
 
-/* TITULO */
 h1{
   font-size:26px;
   color:#111;
-  margin-bottom:10px;
 }
 
-/* TEXTO */
 p{
   color:#555;
-  font-size:15px;
 }
 
 .destaque{
@@ -55,23 +50,18 @@ p{
   font-weight:bold;
 }
 
-/* TIMER */
 .timer{
-  margin:10px 0;
   color:#ff9800;
-  font-weight:bold;
+  margin:10px 0;
 }
 
-/* LISTA */
 .lista{
   text-align:left;
   margin:15px 0;
   font-size:14px;
   color:#333;
-  line-height:1.6;
 }
 
-/* BOTÃO */
 button{
   width:100%;
   padding:15px;
@@ -81,31 +71,56 @@ button{
   color:#000;
   font-size:16px;
   font-weight:bold;
-  cursor:pointer;
-  box-shadow:0 10px 20px rgba(0,255,100,0.3);
-  transition:0.3s;
 }
 
-button:hover{
-  transform:scale(1.05);
-}
-
-/* IMAGEM */
 .imagem{
   width:100%;
   border-radius:15px;
   margin-bottom:15px;
 }
 
-/* NOTIFICAÇÃO */
 .notificacao{
   margin-top:10px;
   font-size:12px;
   color:#777;
 }
-
-/* MOBILE AJUSTE */
-@media(max-width:400px){
-  h1{font-size:22px;}
-}
 </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<img src="https://imgur.com/a/iSwuJTi" class="imagem">
+
+<div class="topo">💥 ÚLTIMAS VAGAS (QUASE LOTADO)</div>
+
+<h1>🔥 Grupo VIP de Ofertas</h1>
+
+<p><span class="destaque">Até 80% OFF</span> direto no seu WhatsApp</p>
+
+<div class="timer">⏳ Vagas acabando rápido</div>
+
+<div class="lista">
+⚡ Ofertas antes de todo mundo<br>
+🎟 Cupons exclusivos<br>
+💰 Preços absurdos<br>
+🚚 Frete grátis<br>
+🔥 Produtos virais
+</div>
+
+<button onclick="entrar()">🚀 ENTRAR NO GRUPO AGORA</button>
+
+<div class="notificacao">🟢 João acabou de entrar</div>
+
+</div>
+
+<script>
+function entrar(){
+  window.location.href = "https://chat.whatsapp.com/EeGCo14giB34USFNg5bbmb?mode=gi_t";
+}
+</script>
+
+</body>
+</html>
