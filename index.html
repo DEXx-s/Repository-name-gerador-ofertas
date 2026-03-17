@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grupo VIP de Ofertas</title>
+<title>Grupo VIP</title>
 
 <style>
 body{
   margin:0;
   font-family: Arial;
-  background:#000;
+  background: linear-gradient(180deg,#000000,#001a0f);
   color:#fff;
   display:flex;
   justify-content:center;
@@ -20,52 +20,64 @@ body{
 .container{
   width:90%;
   max-width:400px;
-  background:#050816;
+  background: linear-gradient(180deg,#020617,#001a0f);
   padding:25px;
-  border-radius:20px;
+  border-radius:25px;
   text-align:center;
-  box-shadow:0 0 30px rgba(0,255,100,0.2);
+  box-shadow:0 0 40px rgba(0,255,100,0.3);
 }
 
 .topo{
-  background:red;
-  padding:8px;
-  border-radius:10px;
+  background: linear-gradient(90deg,#ff0000,#ff3c3c);
+  padding:10px;
+  border-radius:20px;
   font-size:12px;
   margin-bottom:15px;
+  font-weight:bold;
 }
 
 h1{
-  font-size:28px;
+  font-size:30px;
+  margin-bottom:10px;
 }
 
-input{
-  width:100%;
-  padding:12px;
-  margin:8px 0;
-  border-radius:10px;
-  border:none;
+.destaque{
+  color:#00ff88;
+  font-weight:bold;
+}
+
+.lista{
+  text-align:left;
+  margin:20px 0;
+  line-height:1.6;
+}
+
+.timer{
+  color:#ffea00;
+  font-size:18px;
+  margin:15px 0;
 }
 
 button{
   width:100%;
-  padding:15px;
+  padding:18px;
   border:none;
-  border-radius:30px;
-  background:#00c853;
-  color:#fff;
-  font-size:16px;
+  border-radius:40px;
+  background: linear-gradient(90deg,#00ff88,#00c853);
+  color:#000;
+  font-size:18px;
+  font-weight:bold;
   cursor:pointer;
+  box-shadow:0 0 25px rgba(0,255,100,0.6);
   margin-top:10px;
 }
 
-.timer{
-  color:yellow;
-  margin:10px 0;
+button:hover{
+  transform:scale(1.05);
 }
 
 .notificacao{
-  margin-top:10px;
+  margin-top:12px;
   font-size:12px;
   opacity:0.8;
 }
@@ -80,34 +92,64 @@ button{
 
 <h1>🔥 Grupo VIP de Ofertas</h1>
 
-<p>Até 80% OFF todos os dias no WhatsApp</p>
+<p>
+<span class="destaque">Até 80% OFF</span> direto no seu WhatsApp todos os dias
+</p>
 
-<div class="timer">⏳ Restam <span id="timer">3:00</span></div>
+<div class="timer">
+⏳ Vagas acabando em <span id="timer">03:00</span>
+</div>
 
-<input type="text" id="nome" placeholder="Digite seu nome">
-<input type="text" id="numero" placeholder="Seu WhatsApp">
+<div class="lista">
+⚡ Ofertas antes de todo mundo <br>
+🎟️ Cupons secretos exclusivos <br>
+💰 Preços absurdamente baixos <br>
+🚚 Frete grátis todos os dias <br>
+🔥 Produtos virais que esgotam rápido
+</div>
 
-<button onclick="entrar()">🚀 GARANTIR MINHA VAGA</button>
+<button onclick="entrar()">🚀 ENTRAR NO GRUPO VIP AGORA</button>
 
-<div class="notificacao" id="notificacao">🟢 Alguém acabou de entrar no grupo</div>
+<div class="notificacao" id="notificacao">
+🟢 João acabou de entrar no grupo
+</div>
 
 </div>
 
 <script>
+// BOTÃO
 function entrar(){
-
-  const grupo = "https://chat.whatsapp.com/SEU-LINK-AQUI"
-
-  const msg = "Quero entrar no grupo VIP 🔥"
-
-  const url = `https://wa.me/?text=${encodeURIComponent(msg)}`
-
-  // abre WhatsApp
-  window.open(url, "_blank")
-
-  // redireciona pro grupo
-  setTimeout(()=>{
-    window.location.href = grupo
-  },1000)
+  window.location.href = "https://chat.whatsapp.com/SEU-LINK-AQUI"
 }
+
+// TIMER
+let tempo = 180
+
+setInterval(()=>{
+  tempo--
+
+  let min = Math.floor(tempo/60)
+  let sec = tempo % 60
+
+  document.getElementById("timer").innerText =
+    `${min}:${sec < 10 ? "0"+sec : sec}`
+
+  if(tempo <= 0){
+    tempo = 180
+  }
+
+},1000)
+
+// PROVA SOCIAL
+const nomes = ["Maria","João","Carlos","Ana","Lucas","Fernanda","Pedro","Juliana"]
+
+setInterval(()=>{
+  const nome = nomes[Math.floor(Math.random()*nomes.length)]
+  document.getElementById("notificacao").innerText =
+    `🟢 ${nome} acabou de entrar no grupo`
+},3000)
+
 </script>
+
+</body>
+</html>
