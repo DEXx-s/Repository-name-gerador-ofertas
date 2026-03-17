@@ -19,21 +19,21 @@ const page = await browser.newPage()
 
 await page.goto(url,{waitUntil:"networkidle2"})
 
+// espera redirecionar
+await page.waitForTimeout(3000)
+
 const data = await page.evaluate(()=>{
 
-let titulo = document.querySelector("title")?.innerText
+let titulo = document.querySelector('meta[property="og:title"]')?.content
 
-let preco =
-document.querySelector('[class*="price"]')?.innerText ||
-document.body.innerText.match(/R\$ ?\d+[,\.]\d+/)?.[0]
+let imagem = document.querySelector('meta[property="og:image"]')?.content
 
-let imagem =
-document.querySelector('meta[property="og:image"]')?.content
+let preco = document.body.innerText.match(/R\$ ?\d+[,\.]\d+/)?.[0]
 
 return{
 titulo,
-preco,
-imagem
+imagem,
+preco
 }
 
 })
