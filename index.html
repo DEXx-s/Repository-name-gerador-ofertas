@@ -94,58 +94,20 @@ button{
 </div>
 
 <script>
-// BOTÃO
 function entrar(){
 
-  const nome = document.getElementById("nome").value
-  const numero = document.getElementById("numero").value
+  const grupo = "https://chat.whatsapp.com/SEU-LINK-AQUI"
 
-  if(nome === "" || numero === ""){
-    alert("Preencha os dados")
-    return
-  }
-
-  const grupo = "https://chat.whatsapp.com/EeGCo14giB34USFNg5bbmb?mode=gi_t"
-
-  const msg = `Olá! Me chamo ${nome} e quero entrar no grupo VIP 🔥`
+  const msg = "Quero entrar no grupo VIP 🔥"
 
   const url = `https://wa.me/?text=${encodeURIComponent(msg)}`
 
+  // abre WhatsApp
   window.open(url, "_blank")
 
+  // redireciona pro grupo
   setTimeout(()=>{
     window.location.href = grupo
-  },1500)
+  },1000)
 }
-
-// TIMER
-let tempo = 180
-
-setInterval(()=>{
-  tempo--
-
-  let min = Math.floor(tempo/60)
-  let sec = tempo % 60
-
-  document.getElementById("timer").innerText =
-    `${min}:${sec < 10 ? "0"+sec : sec}`
-
-  if(tempo <= 0){
-    tempo = 180
-  }
-
-},1000)
-
-// PROVA SOCIAL
-const nomes = ["Maria","João","Carlos","Ana","Lucas","Fernanda","Pedro"]
-
-setInterval(()=>{
-  const nome = nomes[Math.floor(Math.random()*nomes.length)]
-  document.getElementById("notificacao").innerText =
-    `🟢 ${nome} acabou de entrar no grupo`
-},3000)
-
 </script>
-
-</body>
-</html>
