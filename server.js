@@ -17,20 +17,37 @@ args:["--no-sandbox","--disable-setuid-sandbox"]
 
 const page = await browser.newPage()
 
-await page.goto(url,{waitUntil:"domcontentloaded"})
+await page.goto(url,{waitUntil:"networkidle2"})
 
-const titulo = await page.title()
+const data = await page.evaluate(()=>{
+
+let titulo = document.querySelector("title")?.innerText
+
+let preco =
+document.querySelector('[class*="price"]')?.innerText ||
+document.body.innerText.match(/R\$ ?\d+[,\.]\d+/)?.[0]
+
+let imagem =
+document.querySelector('meta[property="og:image"]')?.content
+
+return{
+titulo,
+preco,
+imagem
+}
+
+})
 
 await browser.close()
 
-res.json({
-titulo
-})
+res.json(data)
 
 }catch(e){
 
 res.json({
-titulo:"Produto Shopee"
+titulo:"Produto Shopee",
+preco:"",
+imagem:""
 })
 
 }
