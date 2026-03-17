@@ -1,11 +1,13 @@
 const puppeteer = require("puppeteer")
 const cron = require("node-cron")
+const axios = require("axios")
 
-const produtos = [
-"https://shopee.com.br/product/908325207/58254866088",
-"https://shopee.com.br/product/OUTRO_LINK_AQUI"
+// 🔥 LISTA AUTOMÁTICA (pode trocar por API depois)
+let produtos = [
+"https://shopee.com.br/product/908325207/58254866088"
 ]
 
+// 🧠 GERAR OFERTA
 async function gerarOferta(page, url){
 
 await page.goto(url,{waitUntil:"networkidle2"})
@@ -26,13 +28,14 @@ return `🔥 SUPER OFERTA
 
 💰 ${data.preco}
 
-🛒 COMPRE AQUI
+🛒 COMPRE AGORA 👇
 ${url}
 
 ⚠️ Promoção pode acabar a qualquer momento`
 }
 
-async function enviarOfertas(){
+// 🤖 POSTAR NO WHATSAPP
+async function iniciarBot(){
 
 const browser = await puppeteer.launch({
 headless:false,
@@ -41,19 +44,20 @@ args:["--no-sandbox"]
 
 const page = await browser.newPage()
 
-// abre WhatsApp Web
 await page.goto("https://web.whatsapp.com")
 
-console.log("Escaneie o QR CODE...")
+console.log("Escaneie o QR CODE")
 
-await page.waitForSelector("._ak8q") // espera login
+await page.waitForSelector("._ak8q")
 
-// abre grupo
-await page.click("span[title='NOME DO SEU GRUPO']")
+await page.click("span[title='SEU GRUPO AQUI']")
 
-for(let url of produtos){
+// LOOP INFINITO
+setInterval(async ()=>{
 
-const mensagem = await gerarOferta(page,url)
+const randomProduto = produtos[Math.floor(Math.random()*produtos.length)]
+
+const mensagem = await gerarOferta(page, randomProduto)
 
 // digita mensagem
 await page.type("div[contenteditable='true']", mensagem)
@@ -61,15 +65,11 @@ await page.type("div[contenteditable='true']", mensagem)
 // envia
 await page.keyboard.press("Enter")
 
-await new Promise(r=>setTimeout(r,5000))
+console.log("Oferta enviada")
+
+}, 1000 * 60 * 20) // a cada 20 minutos
 
 }
 
-}
-
-// roda a cada 30 minutos
-cron.schedule("*/30 * * * *", ()=>{
-enviarOfertas()
-})
-
-console.log("BOT rodando...")
+// 🚀 RODAR
+iniciarBot()
