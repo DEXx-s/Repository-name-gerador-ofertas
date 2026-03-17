@@ -1,195 +1,53 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Grupo VIP de Ofertas</title>
-
-<!-- 🔥 PIXEL (COLOCA O SEU AQUI) -->
-<!-- Facebook Pixel -->
 <script>
-!function(f,b,e,v,n,t,s){
-if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)
-}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
+function entrarGrupo(){
 
-fbq('init', 'SEU_PIXEL_AQUI');
-fbq('track', 'PageView');
-</script>
+  const nome = document.querySelector('input[placeholder="Digite seu nome"]').value
+  const numero = document.querySelector('input[placeholder="Seu WhatsApp"]').value
 
-<style>
+  if(!nome || !numero){
+    alert("Preencha os dados")
+    return
+  }
 
-body{
-margin:0;
-font-family:Arial;
-background:#000;
-color:white;
-text-align:center;
-padding:20px;
+  const grupo = "https://chat.whatsapp.com/SEU-LINK-AQUI"
+
+  // mensagem automática
+  const msg = `Olá! Meu nome é ${nome} e quero entrar no grupo VIP 🔥`
+
+  const url = `https://wa.me/?text=${encodeURIComponent(msg)}`
+
+  // abre whatsapp + grupo
+  window.open(url, "_blank")
+
+  setTimeout(()=>{
+    window.location.href = grupo
+  }, 1500)
 }
-
-.card{
-background:#020617;
-border-radius:20px;
-padding:25px;
-box-shadow:0 0 40px rgba(0,255,100,0.15);
-max-width:400px;
-margin:auto;
-}
-
-.alert{
-background:#dc2626;
-padding:10px;
-border-radius:10px;
-font-size:13px;
-animation:pulse 1.5s infinite;
-}
-
-@keyframes pulse{
-0%{opacity:1}
-50%{opacity:0.5}
-100%{opacity:1}
-}
-
-h1{
-margin-top:10px;
-}
-
-.timer{
-color:#facc15;
-font-size:18px;
-margin:10px 0;
-}
-
-button{
-width:100%;
-padding:18px;
-border:none;
-border-radius:50px;
-font-size:18px;
-font-weight:bold;
-background:#22c55e;
-color:white;
-cursor:pointer;
-animation:glow 1.2s infinite;
-}
-
-@keyframes glow{
-0%{box-shadow:0 0 10px #22c55e}
-50%{box-shadow:0 0 25px #22c55e}
-100%{box-shadow:0 0 10px #22c55e}
-}
-
-.leads{
-margin-top:15px;
-}
-
-input{
-width:90%;
-padding:12px;
-margin-top:10px;
-border-radius:10px;
-border:none;
-}
-
-.fake{
-font-size:12px;
-margin-top:10px;
-color:#94a3b8;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="card">
-
-<div class="alert">
-🚨 ÚLTIMAS VAGAS (GRUPO QUASE LOTADO)
-</div>
-
-<h1>🔥 Grupo VIP de Ofertas</h1>
-
-<p>Até <b>80% OFF</b> todos os dias no WhatsApp</p>
-
-<div class="timer" id="timer"></div>
-
-<!-- CAPTURA LEAD -->
-<div class="leads">
-
-<input id="nome" placeholder="Digite seu nome">
-<input id="whats" placeholder="Seu WhatsApp">
-
-</div>
-
-<br>
-
-<button onclick="entrar()">
-🚀 GARANTIR MINHA VAGA
-</button>
-
-<div class="fake" id="fake">
-Carregando atividade...
-</div>
-
-</div>
-
 <script>
-
-const linkGrupo = "https://chat.whatsapp.com/EeGCo14giB34USFNg5bbmb?mode=gi_t"
-
-// TIMER
 let tempo = 180
 
 setInterval(()=>{
-let min = Math.floor(tempo/60)
-let sec = tempo%60
+  tempo--
 
-document.getElementById("timer").innerText =
-"⏳ Restam " + min + ":" + (sec<10?"0":"")+sec
+  let min = Math.floor(tempo/60)
+  let sec = tempo % 60
 
-tempo--
-if(tempo <= 0) tempo = 180
+  document.querySelector("#timer").innerText = `${min}:${sec < 10 ? "0"+sec : sec}`
+
+  if(tempo <= 0){
+    tempo = 180
+  }
+
 },1000)
-
-// FAKE LIVE
-const nomes = ["João","Maria","Carlos","Ana","Lucas","Pedro","Fernanda"]
-
-setInterval(()=>{
-let nome = nomes[Math.floor(Math.random()*nomes.length)]
-
-document.getElementById("fake").innerText =
-"🟢 "+nome+" acabou de entrar no grupo"
-},2000)
-
-// BOTÃO
-function entrar(){
-
-let nome = document.getElementById("nome").value
-let whats = document.getElementById("whats").value
-
-// DISPARA EVENTO PIXEL
-if(typeof fbq !== "undefined"){
-fbq('track','Lead')
-}
-
-// REDIRECIONA COM DELAY (AUMENTA CONVERSÃO)
-setTimeout(()=>{
-window.open(linkGrupo)
-},800)
-
-}
-
 </script>
 
-</body>
-</html>
+<span id="timer">3:00</span>
+
+<script>
+const nomes = ["Maria","João","Carlos","Ana","Lucas","Fernanda","Pedro"]
+
+setInterval(()=>{
+  const nome = nomes[Math.floor(Math.random()*nomes.length)]
+  document.querySelector("#notificacao").innerText = `${nome} acabou de entrar no grupo`
+},3000)
+</script>
